@@ -52,7 +52,4 @@ async def pagina_inicial():
 
 @app.get("/api/health")
 async def verificar_saude():
-    return {
-        "status": "funcionando",
-        "modulos": ["sinais", "distancia", "ciclo", "blog"]
-    }
+    return {"status": "ok"}  # Bem simples!
