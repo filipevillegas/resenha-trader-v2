@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resenha Trader - Dashboard Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark': '#0a0a0a',
+                        'dark-light': '#141414',
+                        'dark-lighter': '#1a1a1a',
+                        'gold': '#FFD700',
+                        'gold-dark': '#FFA500',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fafafa;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #141414;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            margin: 4px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #9ca3af;
+            text-decoration: none;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+        }
+        
+        .sidebar-item.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+            color: #FFD700;
+            font-weight: 600;
+        }
+        
+        .sidebar-item i {
+            font-size: 20px;
+            width: 24px;
+            margin-right: 16px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar.collapsed .sidebar-item span {
+            display: none;
+        }
+        
+        .sidebar.collapsed .sidebar-item {
+            justify-content: center;
+            padding: 14px;
+        }
+        
+        .sidebar.collapsed .sidebar-item i {
+            margin-right: 0;
+        }
+        
+        /* Main content */
+        .main-content {
+            margin-left: 280px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        .main-content.expanded {
+            margin-left: 80px;
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        /* Stats card */
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), transparent);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        /* Signal card */
+        .signal-card {
+            background: #141414;
+            border: 1px solid #1f1f1f;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .signal-card:hover {
+            border-color: #FFD700;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.1);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-buy {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .badge-sell {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .badge-premium {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.1));
+            color: #FFD700;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #FFD700;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Page transitions */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="p-6 border-b border-gray-800">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                    <i class="fas fa-chart-line text-dark text-lg"></i>
+                </div>
+                <div class="sidebar-text">
+                    <h1 class="text-lg font-bold text-white">Resenha Trader</h1>
+                    <p class="text-xs text-gray-400">Trading Intelligence</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu -->
+        <nav class="py-6">
+            <a href="#" class="sidebar-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-item" data-page="sinais">
+                <i class="fas fa-signal"></i>
+                <span>Sinais Trading</span>
+            </a>
+            <a href="#" class="sidebar-item" data-page="distancia">
+                <i class="fas fa-chart-line"></i>
+                <span>Distância da Média</span>
+            </a>
+            <a href="#" class="sidebar-item" data-page="ciclo">
+                <i class="fas fa-sync-alt"></i>
+                <span>Ciclo Fundamentalista</span>
+            </a>
+            <a href="#" class="sidebar-item" data-page="blog">
+                <i class="fas fa-book"></i>
+                <span>Documentação</span>
+            </a>
+        </nav>
+        
+        <!-- Toggle button -->
+        <div class="absolute bottom-6 left-0 right-0 px-4">
+            <button onclick="toggleSidebar()" class="w-full py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition flex items-center justify-center">
+                <i class="fas fa-bars text-gray-400"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Dashboard</h1>
+                    <p class="text-gray-400" id="pageSubtitle">Visão geral do mercado</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="card py-2 px-4">
+                        <span class="text-xs text-gray-400">Última atualização:</span>
+                        <span class="text-xs text-white font-medium ml-2" id="lastUpdate">Carregando...</span>
+                    </div>
+                    <button onclick="recarregarDados()" class="card py-2 px-4 hover:bg-gray-800">
+                        <i class="fas fa-sync-alt text-gray-400 hover:text-gold transition"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- HOME PAGE -->
+        <div class="page active" id="page-home">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Sinais -->
+                <div class="card stat-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold-dark/10 flex items-center justify-center">
+                            <i class="fas fa-signal text-gold text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold" id="totalSignals">--</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Sinais Ativos</h3>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="text-green-500">▲ <span id="buyCount">--</span></span>
+                        <span class="text-red-500">▼ <span id="sellCount">--</span></span>
+                    </div>
+                </div>
+                
+                <!-- Premium -->
+                <div class="card stat-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center">
+                            <i class="fas fa-gem text-purple-500 text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold" id="premiumCount">--</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Sinais Premium</h3>
+                    <div class="text-xs text-gray-500">Score ≥ 80</div>
+                </div>
+                
+                <!-- Qualidade Média -->
+                <div class="card stat-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
+                            <i class="fas fa-star text-blue-500 text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold" id="avgScore">--</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Score Médio</h3>
+                    <div class="text-xs text-gray-500">Qualidade geral</div>
+                </div>
+                
+                <!-- Setups Ativos -->
+                <div class="card stat-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/10 flex items-center justify-center">
+                            <i class="fas fa-layer-group text-green-500 text-xl"></i>
+                        </div>
+                        <span class="text-3xl font-bold" id="setupCount">--</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Setups Diferentes</h3>
+                    <div class="text-xs text-gray-500">Estratégias ativas</div>
+                </div>
+            </div>
+            
+            <!-- Recent Signals -->
+            <div class="card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white">
+                        <i class="fas fa-bolt text-gold mr-2"></i>
+                        Sinais Recentes
+                    </h2>
+                    <a href="#" onclick="navigateTo('sinais')" class="text-sm text-gold hover:text-gold-dark transition">
+                        Ver todos <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recentSignals">
+                    <div class="text-center py-8 text-gray-500">
+                        <div class="loading mx-auto mb-4"></div>
+                        <p>Carregando sinais...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SINAIS PAGE -->
+        <div class="page" id="page-sinais">
+            <div class="card mb-6">
+                <h2 class="text-lg font-bold mb-4">Filtros</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="searchTicker" placeholder="Buscar ticker..." class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                    <select id="filterSignal" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                        <option value="all">Todos os sinais</option>
+                        <option value="Compra">▲ Compra</option>
+                        <option value="Venda">▼ Venda</option>
+                    </select>
+                    <select id="filterQuality" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                        <option value="all">Todas qualidades</option>
+                        <option value="PREMIUM">💎 Premium</option>
+                        <option value="BOM">⭐ Bom</option>
+                        <option value="REGULAR">⚡ Regular</option>
+                        <option value="FRACO">⚠️ Fraco</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="allSignals">
+                <div class="text-center py-8 text-gray-500">
+                    <div class="loading mx-auto mb-4"></div>
+                    <p>Carregando sinais...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DISTÂNCIA PAGE (Placeholder) -->
+        <div class="page" id="page-distancia">
+            <div class="card text-center py-16">
+                <i class="fas fa-chart-line text-6xl text-gray-600 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-4">Distância da Média</h2>
+                <p class="text-gray-400 mb-6">Este módulo será implementado em breve!</p>
+                <p class="text-sm text-gray-500">Análise de distância em relação às médias móveis</p>
+            </div>
+        </div>
+        
+        <!-- CICLO PAGE (Placeholder) -->
+        <div class="page" id="page-ciclo">
+            <div class="card text-center py-16">
+                <i class="fas fa-sync-alt text-6xl text-gray-600 mb-6"></i>
+                <h2 class="text-2xl font-bold mb-4">Ciclo Fundamentalista</h2>
+                <p class="text-gray-400 mb-6">Este módulo será implementado em breve!</p>
+                <p class="text-sm text-gray-500">Análise de ciclos e indicadores fundamentalistas</p>
+            </div>
+        </div>
+        
+        <!-- BLOG PAGE -->
+        <div class="page" id="page-blog">
+            <div class="card mb-6">
+                <h2 class="text-2xl font-bold mb-6">
+                    <i class="fas fa-graduation-cap text-gold mr-3"></i>
+                    Documentação e Guias
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- Item 1 -->
+                    <div class="border-b border-gray-800 pb-6">
+                        <h3 class="text-lg font-semibold mb-3">📊 Sistema de Sinais</h3>
+                        <p class="text-gray-400 mb-3">
+                            Nossa plataforma utiliza 5 setups de análise técnica profissionais para identificar oportunidades de trading no mercado brasileiro.
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-gray-500 space-y-1">
+                            <li>Larry Williams 9.1 - Exaustão de movimento</li>
+                            <li>Rompimento de Suporte/Resistência</li>
+                            <li>Golden/Death Cross - Cruzamento de médias</li>
+                            <li>RSI - Sobrecompra e sobrevenda</li>
+                            <li>Bollinger Bands - Reversão de bandas</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="border-b border-gray-800 pb-6">
+                        <h3 class="text-lg font-semibold mb-3">⭐ Sistema de Qualidade</h3>
+                        <p class="text-gray-400 mb-3">
+                            Cada sinal recebe um score de 0-100 baseado em múltiplos fatores técnicos:
+                        </p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                            <div class="bg-gray-800 p-3 rounded-lg">
+                                <div class="text-gold mb-1">💎 PREMIUM</div>
+                                <div class="text-gray-500">Score 80-100</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-lg">
+                                <div class="text-blue-500 mb-1">⭐ BOM</div>
+                                <div class="text-gray-500">Score 65-79</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-lg">
+                                <div class="text-yellow-500 mb-1">⚡ REGULAR</div>
+                                <div class="text-gray-500">Score 45-64</div>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-lg">
+                                <div class="text-red-500 mb-1">⚠️ FRACO</div>
+                                <div class="text-gray-500">Score 0-44</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 3 -->
+                    <div class="pb-6">
+                        <h3 class="text-lg font-semibold mb-3">⚠️ Disclaimer</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            As informações e os sinais disponibilizados nesta plataforma são gerados por um sistema automatizado 
+                            com base em análise técnica e inteligência artificial, tendo caráter estritamente educacional. 
+                            Não representam recomendação de compra, venda ou manutenção de ativos financeiros. 
+                            As decisões de investimento são de inteira responsabilidade do investidor.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================
+        // CONFIGURAÇÃO DA API
+        // ============================
+        const API_URL = 'https://sua-url.up.railway.app/api';
+        // ⚠️ SUBSTITUA pela sua URL do Railway!
+        
+        let allSignals = [];
+        
+        // ============================
+        // NAVEGAÇÃO
+        // ============================
+        function navigateTo(page) {
+            // Atualizar menu
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === page) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Atualizar páginas
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById(`page-${page}`).classList.add('active');
+            
+            // Atualizar títulos
+            const titles = {
+                'home': ['Dashboard', 'Visão geral do mercado'],
+                'sinais': ['Sinais Trading', 'Todos os sinais disponíveis'],
+                'distancia': ['Distância da Média', 'Análise de médias móveis'],
+                'ciclo': ['Ciclo Fundamentalista', 'Indicadores fundamentalistas'],
+                'blog': ['Documentação', 'Guias e informações']
+            };
+            
+            if (titles[page]) {
+                document.getElementById('pageTitle').textContent = titles[page][0];
+                document.getElementById('pageSubtitle').textContent = titles[page][1];
+            }
+            
+            return false;
+        }
+        
+        // Event listeners para navegação
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo(item.dataset.page);
+            });
+        });
+        
+        // ============================
+        // SIDEBAR TOGGLE
+        // ============================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+            document.getElementById('mainContent').classList.toggle('expanded');
+        }
+        
+        // ============================
+        // CARREGAR DADOS
+        // ============================
+        async function carregarDados() {
+            try {
+                console.log('🔄 Carregando dados da API...');
+                
+                const response = await fetch(`${API_URL}/sinais/`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const dados = await response.json();
+                console.log('✅ Dados recebidos:', dados);
+                
+                allSignals = dados.signals || dados.sinais || [];
+                
+                if (dados.data) {
+                    document.getElementById('lastUpdate').textContent = dados.data;
+                }
+                
+                atualizarStats();
+                renderizarSinaisRecentes();
+                renderizarTodosSinais();
+                
+            } catch (erro) {
+                console.error('❌ Erro:', erro);
+                document.getElementById('lastUpdate').textContent = 'Erro ao carregar';
+            }
+        }
+        
+        function atualizarStats() {
+            const compras = allSignals.filter(s => (s.signal || '').toLowerCase().includes('compra')).length;
+            const vendas = allSignals.filter(s => (s.signal || '').toLowerCase().includes('venda')).length;
+            const premium = allSignals.filter(s => (s.score || 0) >= 80).length;
+            const avgScore = allSignals.length > 0 
+                ? Math.round(allSignals.reduce((sum, s) => sum + (s.score || 0), 0) / allSignals.length)
+                : 0;
+            const setups = new Set(allSignals.map(s => s.setup)).size;
+            
+            document.getElementById('totalSignals').textContent = allSignals.length;
+            document.getElementById('buyCount').textContent = compras;
+            document.getElementById('sellCount').textContent = vendas;
+            document.getElementById('premiumCount').textContent = premium;
+            document.getElementById('avgScore').textContent = avgScore;
+            document.getElementById('setupCount').textContent = setups;
+        }
+        
+        function renderizarSinaisRecentes() {
+            const container = document.getElementById('recentSignals');
+            const recentes = allSignals.slice(0, 6);
+            
+            if (recentes.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Nenhum sinal disponível</div>';
+                return;
+            }
+            
+            container.innerHTML = recentes.map(sinal => criarCardSinal(sinal)).join('');
+        }
+        
+        function renderizarTodosSinais() {
+            const container = document.getElementById('allSignals');
+            const searchTerm = (document.getElementById('searchTicker')?.value || '').toLowerCase();
+            const filterSignal = document.getElementById('filterSignal')?.value || 'all';
+            const filterQuality = document.getElementById('filterQuality')?.value || 'all';
+            
+            let filtered = allSignals.filter(s => {
+                const matchSearch = !searchTerm || (s.ticker || '').toLowerCase().includes(searchTerm);
+                const matchSignal = filterSignal === 'all' || s.signal === filterSignal;
+                const matchQuality = filterQuality === 'all' || s.quality === filterQuality;
+                return matchSearch && matchSignal && matchQuality;
+            });
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Nenhum sinal encontrado</div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(sinal => criarCardSinal(sinal)).join('');
+        }
+        
+        function criarCardSinal(sinal) {
+            const isCompra = (sinal.signal || '').toLowerCase().includes('compra');
+            const badgeClass = isCompra ? 'badge-buy' : 'badge-sell';
+            const icon = isCompra ? '▲' : '▼';
+            
+            return `
+                <div class="signal-card">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-xl font-bold">${sinal.ticker || 'N/A'}</h3>
+                        <span class="badge ${badgeClass}">${icon} ${sinal.signal || 'N/A'}</span>
+                    </div>
+                    <div class="text-sm text-gray-400 mb-3">${sinal.setup || 'N/A'}</div>
+                    <div class="text-2xl font-bold mb-3">R$ ${typeof sinal.ultimo === 'number' ? sinal.ultimo.toFixed(2) : sinal.ultimo}</div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-400">Score: <span class="font-bold text-white">${sinal.score || 0}</span></span>
+                        <span class="badge ${sinal.score >= 80 ? 'badge-premium' : ''} text-xs">${sinal.quality || 'N/A'}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function recarregarDados() {
+            carregarDados();
+        }
+        
+        // ============================
+        // FILTROS
+        // ============================
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+            
+            // Event listeners para filtros
+            ['searchTicker', 'filterSignal', 'filterQuality'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', renderizarTodosSinais);
+                    el.addEventListener('change', renderizarTodosSinais);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
