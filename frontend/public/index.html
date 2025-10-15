@@ -1875,6 +1875,150 @@
                 });
             });
         }
+
+        // ============================
+        // CONFIGURAÇÃO DA API
+        // ============================
+        const API_URL = 'https://sua-url.up.railway.app/api';
+        // ⚠️ IMPORTANTE: SUBSTITUA pela URL real do seu projeto Railway!
+        // Exemplo: 'https://resenha-trader-production.up.railway.app/api'
+
+        // ============================
+        // CARREGAR DADOS DA API
+        // ============================
+        async function carregarDadosAPI() {
+            try {
+                console.log('🔄 Carregando dados da API Railway...');
+
+                // Fazer requisição para a API
+                const response = await fetch(`${API_URL}/sinais/`);
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
+                const dados = await response.json();
+                console.log('✅ Dados recebidos da API:', dados);
+
+                // Processar sinais recebidos da API
+                let sinaisAPI = [];
+
+                // A API pode retornar em diferentes formatos, verificar ambos
+                if (Array.isArray(dados)) {
+                    sinaisAPI = dados;
+                } else if (dados.sinais) {
+                    sinaisAPI = dados.sinais;
+                } else if (dados.signals) {
+                    sinaisAPI = dados.signals;
+                }
+
+                if (sinaisAPI.length > 0) {
+                    // Processar cada sinal para garantir formato consistente
+                    sinaisAPI = sinaisAPI.map(sinal => {
+                        // Garantir que tags seja uma string
+                        const tagsString = Array.isArray(sinal.tags) ? sinal.tags.join(' ') : (sinal.tags || '');
+
+                        // Determinar assetType baseado nas tags
+                        let assetType = 'N/A';
+                        if (tagsString.includes('Ação')) assetType = 'Ação';
+                        else if (tagsString.includes('BDR')) assetType = 'BDR';
+                        else if (tagsString.includes('ETF')) assetType = 'ETF';
+
+                        return {
+                            ticker: sinal.ticker || '',
+                            setup: sinal.setup || '',
+                            signal: sinal.signal || '',
+                            score: sinal.score || 0,
+                            ultimo: String(sinal.ultimo || '0'),
+                            gain1: String(sinal.gain1 || 'N/A'),
+                            gain2: String(sinal.gain2 || 'N/A'),
+                            loss1: String(sinal.loss1 || 'N/A'),
+                            loss2: String(sinal.loss2 || 'N/A'),
+                            quality: sinal.quality || 'REGULAR',
+                            tags: tagsString,
+                            assetType: assetType
+                        };
+                    });
+
+                    // Substituir os sinais globais pelos da API
+                    signals.length = 0;
+                    signals.push(...sinaisAPI);
+                    filteredSignals = [...signals];
+
+                    console.log(`✅ ${sinaisAPI.length} sinais carregados da API Railway`);
+
+                    // Atualizar data se disponível
+                    if (dados.data || dados.data_analise) {
+                        const dataFormatada = dados.data || dados.data_analise;
+                        document.getElementById('lastUpdate').textContent = dataFormatada;
+                        document.getElementById('opportunityDate').textContent = dataFormatada;
+                    }
+
+                    // Re-inicializar dropdowns e re-renderizar tudo
+                    initializeSetupDropdown();
+                    initializeQualityDropdown();
+                    initializeAssetTypeDropdown();
+                    updateDashboard();
+                    renderQuickFilters();
+                    renderSignals(filteredSignals);
+
+                    // Mostrar notificação de sucesso
+                    console.log('✅ Interface atualizada com dados da API');
+                } else {
+                    console.log('⚠️ API retornou 0 sinais, mantendo dados estáticos do HTML');
+                }
+
+            } catch (erro) {
+                console.error('❌ Erro ao carregar dados da API Railway:', erro);
+                console.log('ℹ️ Continuando com dados estáticos do HTML');
+                // Não fazer nada - dados estáticos já estão carregados
+            }
+        }
+
+        // ============================
+        // AUTO-ATUALIZAÇÃO PERIÓDICA (OPCIONAL)
+        // ============================
+        function iniciarAutoAtualizacao() {
+            // Atualizar a cada 5 minutos (300000ms)
+            setInterval(() => {
+                console.log('🔄 Atualizando dados automaticamente...');
+                carregarDadosAPI();
+            }, 300000);
+        }
+
+        // ============================
+        // MODIFICAR INICIALIZAÇÃO PARA INCLUIR API
+        // ============================
+        // Remover o listener original do DOMContentLoaded e substituir por este:
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando Resenha Trader...');
+
+            // 1. Inicializar com dados estáticos (fallback)
+            console.log('📊 Carregando dados estáticos...');
+            initializeSetupDropdown();
+            initializeQualityDropdown();
+            initializeAssetTypeDropdown();
+            updateDashboard();
+            renderQuickFilters();
+            renderSignals(filteredSignals);
+            setupEventListeners();
+            renderTabContent('overview');
+
+            // 2. Tentar carregar dados da API Railway
+            console.log('🌐 Tentando conectar à API Railway...');
+            carregarDadosAPI();
+
+            // 3. Iniciar auto-atualização (opcional - comentar se não quiser)
+            // iniciarAutoAtualizacao();
+        });
+
+        // ============================
+        // BOTÃO MANUAL DE ATUALIZAÇÃO (OPCIONAL)
+        // ============================
+        function atualizarManualmente() {
+            console.log('🔄 Atualização manual solicitada pelo usuário');
+            carregarDadosAPI();
+        }
     </script>
 </body>
 </html>
