@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resenha Trader - Premium Trading Intelligence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark': '#0a0a0a',
+                        'dark-light': '#141414',
+                        'dark-lighter': '#1a1a1a',
+                        'gold': '#FFD700',
+                        'gold-dark': '#FFA500',
+                        'emerald': '#10B981',
+                        'emerald-dark': '#059669',
+                        'red': '#EF4444',
+                        'blue': '#3B82F6',
+                        'purple': '#8B5CF6',
+                        'gray-border': '#3f3f46',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'display': ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0a;
+            color: #fafafa;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #141414;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b;
+        }
+        
+        .glass {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-dark {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .tag-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            display: inline-block;
+            border: 1px solid;
+        }
+        
+        .tag-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+            border-color: #FFD700 !important;
+            transform: scale(1.05);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip-content {
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: #fafafa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            max-width: 300px;
+            white-space: normal;
+        }
+        
+        .tooltip-content::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1a1a1a;
+        }
+        
+        .tooltip:hover .tooltip-content {
+            opacity: 1;
+        }
+        
+        .dropdown-custom {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            background: #1a1a1a;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .dropdown-toggle:hover {
+            border-color: #FFD700;
+        }
+        
+        .dropdown-toggle.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+        
+        .dropdown-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s;
+            pointer-events: none;
+        }
+        
+        .dropdown-icon.open {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .dropdown-item.select-all {
+            border-bottom: 1px solid #3f3f46;
+            margin-bottom: 4px;
+            padding-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .dropdown-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #3f3f46;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-checkbox.checked {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-color: #FFD700;
+        }
+        
+        .dropdown-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0a0a0a;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .dropdown-count {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            color: #FFD700;
+            margin-left: auto;
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hide-mobile {
+                display: none;
+            }
+            
+            .dropdown-menu {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="glass-dark border-b border-gray-border sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                        <i class="fas fa-chart-line text-dark text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-display font-bold gradient-gold">Resenha Trader</h1>
+                        <p class="text-xs text-gray-400">Premium Trading Intelligence</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="glass px-4 py-2 rounded-lg">
+                        <span class="text-xs text-gray-400">Última Atualização:</span>
+                        <span class="text-xs text-white font-medium ml-1" id="lastUpdate">09/10/2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <section class="mb-8 animate-fade-in">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass rounded-2xl p-6 card-premium">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-gold/20 to-gold-dark/10 flex items-center justify-center">
+                            <i class="fas fa-signal text-gold"></i>
+                        </div>
+                        <span class="text-2xl font-bold font-display" id="totalSignals">25</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Sinais Ativos</h3>
+                    <div class="flex items-center space-x-4 text-base font-semibold">
+                        <span class="text-emerald" id="buyCount">▲ 14 Compras</span>
+                        <span class="text-red" id="sellCount">▼ 11 Vendas</span>
+                    </div>
+                </div>
+
+                <div class="glass rounded-2xl p-6 card-premium">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple/20 to-purple/10 flex items-center justify-center">
+                            <i class="fas fa-gem text-purple"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold font-display">25</div>
+                            <div class="text-xs text-gray-400">Total</div>
+                        </div>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Por Qualidade</h3>
+                    <div class="space-y-1" id="qualitySummary"></div>
+                </div>
+
+                <div class="glass rounded-2xl p-6 card-premium">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald/20 to-emerald-dark/10 flex items-center justify-center">
+                            <i class="fas fa-chart-line text-emerald"></i>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold font-display" id="activeSetupsCount">6</div>
+                            <div class="text-xs text-gray-400">Setups</div>
+                        </div>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Por Setup</h3>
+                    <div class="space-y-1" id="setupSummary"></div>
+                </div>
+
+                <div class="glass rounded-2xl p-6 card-premium">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue/20 to-blue/10 flex items-center justify-center">
+                            <i class="fas fa-filter text-blue"></i>
+                        </div>
+                        <span class="text-2xl font-bold font-display" id="activeFilterCount">0</span>
+                    </div>
+                    <h3 class="text-sm text-gray-400 mb-2">Filtros Ativos</h3>
+                    <button class="text-xs text-blue hover:text-blue/80 transition-all" onclick="clearAllFilters()">
+                        Limpar todos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass rounded-2xl p-6 mb-8 animate-slide-up">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-display font-bold flex items-center">
+                    <i class="fas fa-sliders-h text-gold mr-3"></i>
+                    Filtros Inteligentes
+                </h2>
+                <button class="text-sm text-gray-400 hover:text-white transition-all" onclick="toggleFilters()">
+                    <i class="fas fa-chevron-up" id="filterToggle"></i>
+                </button>
+            </div>
+
+            <div id="filtersContainer">
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Buscar Ticker</label>
+                        <div class="relative">
+                            <input type="text" 
+                                   id="searchInput"
+                                   placeholder="Digite o ticker..."
+                                   class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-all font-medium">
+                            <i class="fas fa-search absolute right-4 top-4 text-gray-500"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Tipo de Sinal</label>
+                        <select id="signalFilter" class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white focus:border-gold focus:outline-none transition-all font-medium">
+                            <option value="all">Todos</option>
+                            <option value="Compra">▲ Compra</option>
+                            <option value="Venda">▼ Venda</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Tipo de Ativo</label>
+                        <div class="dropdown-custom">
+                            <button type="button" class="dropdown-toggle" id="assetTypeDropdownToggle">
+                                <span id="assetTypeDropdownText">Todos os tipos</span>
+                                <i class="fas fa-chevron-down dropdown-icon" id="assetTypeDropdownIcon"></i>
+                            </button>
+                            <div class="dropdown-menu" id="assetTypeDropdownMenu"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Qualidade</label>
+                        <div class="dropdown-custom">
+                            <button type="button" class="dropdown-toggle" id="qualityDropdownToggle">
+                                <span id="qualityDropdownText">Todas as qualidades</span>
+                                <i class="fas fa-chevron-down dropdown-icon" id="qualityDropdownIcon"></i>
+                            </button>
+                            <div class="dropdown-menu" id="qualityDropdownMenu"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Setups</label>
+                        <div class="dropdown-custom">
+                            <button type="button" class="dropdown-toggle" id="setupDropdownToggle">
+                                <span id="setupDropdownText">Todos os setups</span>
+                                <i class="fas fa-chevron-down dropdown-icon" id="setupDropdownIcon"></i>
+                            </button>
+                            <div class="dropdown-menu" id="setupDropdownMenu"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-300 mb-3">Filtros Rápidos</label>
+                    <div class="flex flex-wrap gap-2" id="quickFilters"></div>
+                </div>
+
+                <div class="flex items-center flex-wrap gap-2 pt-4 border-t border-gray-border" id="activeFiltersDisplay">
+                    <span class="text-xs text-gray-400">Filtros ativos:</span>
+                    <span class="text-xs text-gray-500 italic">Nenhum filtro aplicado</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-display font-bold">
+                    Oportunidades para <span id="opportunityDate">09/10/2025</span>
+                </h2>
+                <div class="flex items-center space-x-4">
+                    <button onclick="sortByScore()" class="text-sm text-gray-400 hover:text-white transition-all">
+                        <i class="fas fa-sort-amount-down mr-1"></i> Score
+                    </button>
+                    <button onclick="sortByTicker()" class="text-sm text-gray-400 hover:text-white transition-all">
+                        <i class="fas fa-sort-alpha-down mr-1"></i> Ticker
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="signalsGrid"></div>
+        </section>
+
+        <section class="glass rounded-2xl p-6 mb-8">
+            <h2 class="text-lg font-display font-bold mb-6">
+                <i class="fas fa-graduation-cap text-gold mr-3"></i>
+                Inteligência de Trading
+            </h2>
+
+            <div class="flex flex-wrap gap-2 mb-6 border-b border-gray-border">
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-white border-b-2 border-gold transition-all" data-tab="overview">
+                    Visão Geral
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="tags">
+                    Sistema de Tags
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="larry">
+                    Larry Williams 9.1
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="breakout">
+                    Rompimentos
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="cross">
+                    Golden & Death Cross
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="rsi">
+                    RSI
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="bollinger">
+                    Bollinger Bands
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all" data-tab="risk">
+                    Gestão de Risco
+                </button>
+            </div>
+
+            <div id="tabContent"></div>
+        </section>
+
+        <footer class="text-center py-8 border-t border-gray-border">
+            <p class="text-sm text-gray-400 mb-4">
+                <i class="fas fa-exclamation-triangle text-gold mr-2"></i>
+                <strong>Disclaimer</strong>
+            </p>
+            <p class="text-xs text-gray-400 max-w-4xl mx-auto leading-relaxed">
+                As informações e os sinais disponibilizados nesta página são gerados por um sistema automatizado com base em análise técnica e inteligência artificial, tendo caráter estritamente educacional. Não representam recomendação de compra, venda ou manutenção de ativos financeiros. As decisões de investimento são de inteira responsabilidade do investidor.
+            </p>
+            <p class="text-xs text-gray-500 mt-4">
+                © 2025 Resenha Trader. Todos os direitos reservados.
+            </p>
+        </footer>
+    </main>
+
+    <button class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-gold to-gold-dark rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-all z-40" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up text-dark"></i>
+    </button>
+
+    <script>
+        // ============================
+        // DATA
+        // ============================
+        const signals = [
+    { ticker: "BKNG34", setup: "Rompimento de Suporte", signal: "Venda", score: 75, ultimo: "156.88", gain1: "149.31", gain2: "145.53", loss1: "160.67", loss2: "164.45", quality: "BOM", tags: "BAIXA VOL+ RSI32 RSI- BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "BOVX11", setup: "Bollinger Compra", signal: "Compra", score: 75, ultimo: "14.55", gain1: "14.77", gain2: "15.07", loss1: "14.39", loss2: "N/A", quality: "BOM", tags: "ALTA VOL+ RSI47 RSI- ETF nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "TEND3", setup: "Bollinger Compra", signal: "Compra", score: 75, ultimo: "24.41", gain1: "26.15", gain2: "27.91", loss1: "23.45", loss2: "N/A", quality: "BOM", tags: "ALTA VOL+ RSI42 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "JALL3", setup: "Larry Williams 9.1", signal: "Venda", score: 67, ultimo: "2.66", gain1: "2.50", gain2: "2.41", loss1: "2.76", loss2: "2.82", quality: "BOM", tags: "BAIXA VOL+ RSI35 RSI- Ação EXP CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "AVGO34", setup: "Larry Williams 9.1", signal: "Compra", score: 66, ultimo: "26.24", gain1: "28.02", gain2: "28.91", loss1: "25.76", loss2: "24.46", quality: "BOM", tags: "ALTA VOL+ RSI56 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "PRNR3", setup: "Rompimento de Suporte", signal: "Venda", score: 62, ultimo: "15.35", gain1: "14.59", gain2: "14.09", loss1: "15.60", loss2: "16.11", quality: "REGULAR", tags: "BAIXA VOL+ RSI33 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "SUZB3", setup: "Rompimento de Suporte", signal: "Venda", score: 62, ultimo: "47.83", gain1: "46.38", gain2: "45.41", loss1: "48.31", loss2: "49.28", quality: "REGULAR", tags: "BAIXA VOL+ RSI30 RSI- Ação EXP CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "CYRE3", setup: "Bollinger Compra", signal: "Compra", score: 56, ultimo: "29.87", gain1: "30.36", gain2: "31.11", loss1: "28.86", loss2: "N/A", quality: "REGULAR", tags: "ALTA VOL+ RSI53 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "SMAL11", setup: "Bollinger Compra", signal: "Compra", score: 56, ultimo: "105.10", gain1: "109.55", gain2: "114.20", loss1: "104.01", loss2: "N/A", quality: "REGULAR", tags: "LATERAL VOL+ RSI38 RSI- ETF nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "NIKE34", setup: "Larry Williams 9.1", signal: "Venda", score: 55, ultimo: "36.68", gain1: "34.36", gain2: "33.20", loss1: "37.71", loss2: "39.00", quality: "REGULAR", tags: "BAIXA VOL- RSI37 RSI- BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "AZZA3", setup: "Bollinger Compra", signal: "Compra", score: 52, ultimo: "25.25", gain1: "30.53", gain2: "35.98", loss1: "24.58", loss2: "N/A", quality: "REGULAR", tags: "BAIXA VOL+ RSI21 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "UNHH34", setup: "Rompimento de Resistência", signal: "Compra", score: 51, ultimo: "28.25", gain1: "29.34", gain2: "30.07", loss1: "27.89", loss2: "27.16", quality: "REGULAR", tags: "LATERAL VOL+ RSI70 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "ALUG11", setup: "Rompimento de Suporte", signal: "Venda", score: 50, ultimo: "40.41", gain1: "39.59", gain2: "39.04", loss1: "40.68", loss2: "41.23", quality: "REGULAR", tags: "BAIXA VOL- RSI38 RSI- ETF nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "ANIM3", setup: "Bollinger Compra", signal: "Compra", score: 50, ultimo: "3.07", gain1: "3.42", gain2: "3.80", loss1: "2.91", loss2: "N/A", quality: "REGULAR", tags: "LATERAL VOL+ RSI37 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "AURA33", setup: "Rompimento de Resistência", signal: "Compra", score: 50, ultimo: "67.50", gain1: "71.56", gain2: "74.26", loss1: "66.15", loss2: "63.44", quality: "REGULAR", tags: "ALTA VOL- RSI69 RSI+ Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "C2RW34", setup: "Rompimento de Resistência", signal: "Compra", score: 50, ultimo: "123.67", gain1: "128.62", gain2: "131.91", loss1: "122.02", loss2: "118.72", quality: "REGULAR", tags: "ALTA VOL- RSI65 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "IRBR3", setup: "Larry Williams 9.1", signal: "Venda", score: 50, ultimo: "47.50", gain1: "45.20", gain2: "44.04", loss1: "48.11", loss2: "49.80", quality: "REGULAR", tags: "LATERAL VOL+ RSI49 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "LIGT3", setup: "Rompimento de Suporte", signal: "Venda", score: 50, ultimo: "5.12", gain1: "4.78", gain2: "4.55", loss1: "5.23", loss2: "5.46", quality: "REGULAR", tags: "BAIXA VOL- RSI34 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "NASD11", setup: "Rompimento de Resistência", signal: "Compra", score: 50, ultimo: "18.71", gain1: "19.04", gain2: "19.26", loss1: "18.60", loss2: "18.38", quality: "REGULAR", tags: "ALTA VOL+ RSI69 RSI+ ETF nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "RECV3", setup: "Rompimento de Suporte", signal: "Venda", score: 50, ultimo: "12.26", gain1: "11.89", gain2: "11.63", loss1: "12.39", loss2: "12.64", quality: "REGULAR", tags: "BAIXA VOL+ RSI33 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "RIOT34", setup: "Rompimento de Resistência", signal: "Compra", score: 50, ultimo: "360.39", gain1: "369.34", gain2: "375.30", loss1: "357.41", loss2: "351.44", quality: "REGULAR", tags: "ALTA VOL- RSI66 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "WEGE3", setup: "Rompimento de Suporte", signal: "Venda", score: 50, ultimo: "35.50", gain1: "34.34", gain2: "33.56", loss1: "35.89", loss2: "36.66", quality: "REGULAR", tags: "BAIXA VOL- RSI38 RSI- Ação EXP CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "VVEO3", setup: "Larry Williams 9.1", signal: "Venda", score: 49, ultimo: "1.19", gain1: "1.05", gain2: "0.98", loss1: "1.25", loss2: "1.33", quality: "REGULAR", tags: "LATERAL VOL- RSI52 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "CBAV3", setup: "Rompimento de Resistência", signal: "Compra", score: 46, ultimo: "4.40", gain1: "4.67", gain2: "4.86", loss1: "4.31", loss2: "4.13", quality: "REGULAR", tags: "LATERAL VOL+ RSI70 RSI+ Ação EXP CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "LREN3", setup: "Bollinger Compra", signal: "Compra", score: 46, ultimo: "13.81", gain1: "15.55", gain2: "17.42", loss1: "13.40", loss2: "N/A", quality: "REGULAR", tags: "BAIXA VOL+ RSI29 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "B3SA3", setup: "Bollinger Compra", signal: "Compra", score: 45, ultimo: "12.66", gain1: "13.13", gain2: "13.88", loss1: "12.16", loss2: "N/A", quality: "REGULAR", tags: "LATERAL VOL+ RSI43 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "NFLX34", setup: "Larry Williams 9.1", signal: "Compra", score: 44, ultimo: "130.24", gain1: "135.87", gain2: "138.69", loss1: "126.89", loss2: "124.61", quality: "FRACO", tags: "LATERAL VOL+ RSI53 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "ADBE34", setup: "Larry Williams 9.1", signal: "Compra", score: 43, ultimo: "38.29", gain1: "40.14", gain2: "41.06", loss1: "37.77", loss2: "36.44", quality: "FRACO", tags: "LATERAL VOL- RSI52 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "HBOR3", setup: "Larry Williams 9.1", signal: "Venda", score: 43, ultimo: "3.18", gain1: "2.84", gain2: "2.67", loss1: "3.49", loss2: "3.52", quality: "FRACO", tags: "LATERAL VOL+ RSI40 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "GRND3", setup: "Bollinger Compra", signal: "Compra", score: 41, ultimo: "5.02", gain1: "5.18", gain2: "5.34", loss1: "4.99", loss2: "N/A", quality: "FRACO", tags: "BAIXA VOL+ RSI35 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "AMZO34", setup: "Larry Williams 9.1", signal: "Compra", score: 40, ultimo: "60.15", gain1: "62.79", gain2: "64.11", loss1: "59.33", loss2: "57.51", quality: "FRACO", tags: "BAIXA VOL- RSI49 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "TECN3", setup: "Rompimento de Suporte", signal: "Venda", score: 38, ultimo: "6.58", gain1: "6.41", gain2: "N/A", loss1: "6.66", loss2: "N/A", quality: "FRACO", tags: "LATERAL VOL- RSI44 RSI- Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "A1MD34", setup: "Rompimento de Resistência", signal: "Compra", score: 35, ultimo: "158.75", gain1: "164.36", gain2: "N/A", loss1: "155.95", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL- RSI84 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "ASML34", setup: "RSI Sobrecompra", signal: "Venda", score: 35, ultimo: "95.79", gain1: "93.34", gain2: "N/A", loss1: "97.01", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL+ RSI65 RSI- BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "LAND3", setup: "RSI Sobrevenda", signal: "Compra", score: 35, ultimo: "8.75", gain1: "8.99", gain2: "N/A", loss1: "8.63", loss2: "N/A", quality: "FRACO", tags: "BAIXA VOL- RSI31 RSI+ Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "M2RV34", setup: "Rompimento de Resistência", signal: "Compra", score: 35, ultimo: "49.03", gain1: "50.86", gain2: "N/A", loss1: "48.11", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL- RSI73 RSI+ BDR nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "PORT3", setup: "Rompimento de Resistência", signal: "Compra", score: 35, ultimo: "18.34", gain1: "18.42", gain2: "N/A", loss1: "18.30", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL- RSI74 RSI+ Ação DOM CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "USTK11", setup: "Rompimento de Resistência", signal: "Compra", score: 35, ultimo: "18.45", gain1: "18.77", gain2: "N/A", loss1: "18.29", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL- RSI72 RSI+ ETF nan CDI0 US10YT0 USD0 CMDTY0" },
+    { ticker: "UTEC11", setup: "Rompimento de Resistência", signal: "Compra", score: 35, ultimo: "24.35", gain1: "24.76", gain2: "N/A", loss1: "24.14", loss2: "N/A", quality: "FRACO", tags: "ALTA VOL- RSI72 RSI+ ETF nan CDI0 US10YT0 USD0 CMDTY0" }
+];
+
+        // ============================
+        // DATA PRE-PROCESSING (CORREÇÃO)
+        // ============================
+        // Adiciona a propriedade 'assetType' a cada sinal para facilitar a filtragem e a renderização.
+        signals.forEach(signal => {
+            if (signal.tags.includes('Ação')) {
+                signal.assetType = 'Ação';
+            } else if (signal.tags.includes('BDR')) {
+                signal.assetType = 'BDR';
+            } else if (signal.tags.includes('ETF')) {
+                signal.assetType = 'ETF';
+            } else {
+                signal.assetType = 'N/A'; // Categoria padrão se nenhuma for encontrada
+            }
+        });
+
+        // ============================
+        // GLOBAL VARIABLES
+        // ============================
+        let filteredSignals = [...signals];
+        let activeFilters = [];
+        let selectedSetups = [];
+        let selectedQualities = [];
+        let selectedAssetTypes = [];
+
+        const tagDescriptions = {
+            'ALTA': 'Tendência de Alta: Movimento ascendente identificado',
+            'BAIXA': 'Tendência de Baixa: Movimento descendente identificado',
+            'LATERAL': 'Tendência Lateral: Sem direção definida, mercado em consolidação',
+            'VOL+': 'Volume Alto: Volume atual acima da média de 21 períodos (forte interesse)',
+            'VOL-': 'Volume Baixo: Volume atual abaixo da média de 21 períodos (baixo interesse)',
+            'RSI+': 'RSI Ascendente: RSI acima de sua média móvel (momentum positivo)',
+            'RSI-': 'RSI Descendente: RSI abaixo de sua média móvel (momentum negativo)',
+            'Ação': 'Ação: Papel negociado na bolsa brasileira',
+            'BDR': 'BDR: Brazilian Depositary Receipt - Ações de empresas estrangeiras',
+            'ETF': 'ETF: Exchange Traded Fund - Fundo de índice',
+            'DOM': 'DOM: Mercado Doméstico - Nacional',
+            'EXP': 'EXP: Mercado Exportador - Internacional'
+        };
+
+        // ============================
+        // INITIALIZATION
+        // ============================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSetupDropdown();
+            initializeQualityDropdown();
+            initializeAssetTypeDropdown();
+            updateDashboard();
+            renderQuickFilters();
+            renderSignals(filteredSignals);
+            setupEventListeners();
+            renderTabContent('overview');
+        });
+
+        // ============================
+        // HELPER FUNCTIONS
+        // ============================
+        function getAvailableSetups() {
+            const setupCounts = {};
+            signals.forEach(signal => {
+                setupCounts[signal.setup] = (setupCounts[signal.setup] || 0) + 1;
+            });
+            return setupCounts;
+        }
+
+        function getAvailableQualities() {
+            const qualityCounts = {};
+            signals.forEach(signal => {
+                qualityCounts[signal.quality] = (qualityCounts[signal.quality] || 0) + 1;
+            });
+            return qualityCounts;
+        }
+
+        function getAvailableAssetTypes() {
+            const assetTypeCounts = {};
+            signals.forEach(signal => {
+                if (signal.assetType && signal.assetType !== 'N/A') {
+                    assetTypeCounts[signal.assetType] = (assetTypeCounts[signal.assetType] || 0) + 1;
+                }
+            });
+            return assetTypeCounts;
+        }
+
+        function getQualityIcon(quality) {
+            const icons = {
+                'PREMIUM': '💎',
+                'BOM': '⭐',
+                'REGULAR': '⚡',
+                'FRACO': '⚠️'
+            };
+            return icons[quality] || '';
+        }
+
+        function getAssetTypeColor(type) {
+            const colors = {
+                'Ação': 'bg-blue-600/20 text-blue-400 border-blue-600/30',
+                'BDR': 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30',
+                'ETF': 'bg-sky-600/20 text-sky-400 border-sky-600/30'
+            };
+            return colors[type] || 'bg-gray-600/20 text-gray-400 border-gray-600/30';
+        }
+
+        function getScoreColorClass(score) {
+            if (score >= 80) return 'bg-emerald/20 text-emerald';
+            if (score >= 65) return 'bg-blue/20 text-blue';
+            if (score >= 45) return 'bg-yellow-500/20 text-yellow-500';
+            return 'bg-red/20 text-red';
+        }
+
+        function getTagClass(tag) {
+            const classes = {
+                'ALTA': 'bg-emerald/20 text-emerald border-emerald/30',
+                'BAIXA': 'bg-red/20 text-red border-red/30',
+                'LATERAL': 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30',
+                'VOL+': 'bg-orange-500/20 text-orange-500 border-orange-500/30',
+                'VOL-': 'bg-orange-500/10 text-orange-500/70 border-orange-500/20',
+                'RSI+': 'bg-teal-500/20 text-teal-400 border-teal-500/30',
+                'RSI-': 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+                'Ação': 'bg-blue-600/20 text-blue-400 border-blue-600/30',
+                'BDR': 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30',
+                'ETF': 'bg-sky-600/20 text-sky-400 border-sky-600/30',
+                'DOM': 'bg-lime-500/20 text-lime-400 border-lime-500/30',
+                'EXP': 'bg-cyan-100/20 text-cyan-300 border-cyan-100/30'
+            };
+            
+            if (tag.startsWith('RSI') && !tag.includes('+') && !tag.includes('-')) {
+                const value = parseInt(tag.replace('RSI', ''));
+                if (value > 70) return 'bg-red/20 text-red border-red/30';
+                if (value < 30) return 'bg-emerald/20 text-emerald border-emerald/30';
+                return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
+            }
+            
+            if (tag.startsWith('CDI')) {
+                return 'bg-gray-800/40 text-gray-300 border-gray-700/40';
+            }
+            
+            if (tag.startsWith('US10YT')) {
+                return 'bg-purple-600/20 text-purple-400 border-purple-600/30';
+            }
+            
+            if (tag.startsWith('USD')) {
+                return 'bg-green-600/20 text-green-400 border-green-600/30';
+            }
+            
+            if (tag.startsWith('CMDTY')) {
+                return 'bg-amber-700/20 text-amber-400 border-amber-700/30';
+            }
+            
+            return classes[tag] || 'bg-gray-600/20 text-gray-400 border-gray-600/30';
+        }
+
+        function getTagDescription(tag) {
+            if (tag.startsWith('RSI') && !tag.includes('+') && !tag.includes('-')) {
+                const value = parseInt(tag.replace('RSI', ''));
+                if (value > 70) return `RSI ${value}: Sobrecompra (potencial reversão de baixa)`;
+                if (value < 30) return `RSI ${value}: Sobrevenda (potencial reversão de alta)`;
+                return `RSI ${value}: Zona neutra`;
+            }
+            
+            if (tag.startsWith('CDI')) {
+                const value = parseInt(tag.replace('CDI', ''));
+                if (value > 50) return `CDI${value}: Forte correlação positiva com CDI`;
+                if (value < -50) return `CDI${value}: Forte correlação negativa com CDI`;
+                return `CDI${value}: Correlação moderada com CDI`;
+            }
+            
+            if (tag.startsWith('US10YT')) {
+                const value = parseInt(tag.replace('US10YT', ''));
+                if (value > 50) return `US10YT${value}: Forte correlação positiva com Treasury 10Y`;
+                if (value < -50) return `US10YT${value}: Forte correlação negativa com Treasury 10Y`;
+                return `US10YT${value}: Correlação moderada com Treasury 10Y`;
+            }
+            
+            if (tag.startsWith('USD')) {
+                const value = parseInt(tag.replace('USD', ''));
+                if (value > 50) return `USD${value}: Forte correlação positiva com Dólar`;
+                if (value < -50) return `USD${value}: Forte correlação negativa com Dólar`;
+                return `USD${value}: Correlação moderada com Dólar`;
+            }
+            
+            if (tag.startsWith('CMDTY')) {
+                const value = parseInt(tag.replace('CMDTY', ''));
+                if (value > 50) return `CMDTY${value}: Forte correlação positiva com Commodities`;
+                if (value < -50) return `CMDTY${value}: Forte correlação negativa com Commodities`;
+                return `CMDTY${value}: Correlação moderada com Commodities`;
+            }
+            
+            return tagDescriptions[tag] || '';
+        }
+
+        // ============================
+        // DROPDOWN FUNCTIONS
+        // ============================
+        function initializeSetupDropdown() {
+            const availableSetups = getAvailableSetups();
+            const dropdownMenu = document.getElementById('setupDropdownMenu');
+            const setupCount = Object.keys(availableSetups).length;
+            
+            if (setupCount <= 5) {
+                dropdownMenu.style.maxHeight = 'auto';
+            } else if (setupCount <= 10) {
+                dropdownMenu.style.maxHeight = '320px';
+            } else {
+                dropdownMenu.style.maxHeight = '400px';
+            }
+            
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllSetups(event)">
+                    <div class="dropdown-checkbox" id="selectAllSetupCheckbox"></div>
+                    <span>Todos os setups</span>
+                    <span class="dropdown-count">${setupCount}</span>
+                </div>
+            `;
+            
+            Object.entries(availableSetups).forEach(([setup, count]) => {
+                const setupId = setup.replace(/\s+/g, '_').replace(/\./g, '_');
+                html += `
+                    <div class="dropdown-item" onclick="toggleSetup(event, '${setup}')">
+                        <div class="dropdown-checkbox" id="setup_${setupId}"></div>
+                        <span>${setup}</span>
+                        <span class="dropdown-count">${count}</span>
+                    </div>
+                `;
+            });
+            
+            dropdownMenu.innerHTML = html;
+        }
+
+        function initializeQualityDropdown() {
+            const availableQualities = getAvailableQualities();
+            const dropdownMenu = document.getElementById('qualityDropdownMenu');
+            const qualityCount = Object.keys(availableQualities).length;
+            
+            dropdownMenu.style.maxHeight = 'auto';
+            
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllQualities(event)">
+                    <div class="dropdown-checkbox" id="selectAllQualityCheckbox"></div>
+                    <span>Todas as qualidades</span>
+                    <span class="dropdown-count">${qualityCount}</span>
+                </div>
+            `;
+            
+            const qualityOrder = ['PREMIUM', 'BOM', 'REGULAR', 'FRACO'];
+            qualityOrder.forEach(quality => {
+                if (availableQualities[quality]) {
+                    const icon = getQualityIcon(quality);
+                    html += `
+                        <div class="dropdown-item" onclick="toggleQuality(event, '${quality}')">
+                            <div class="dropdown-checkbox" id="quality_${quality}"></div>
+                            <span>${icon} ${quality}</span>
+                            <span class="dropdown-count">${availableQualities[quality]}</span>
+                        </div>
+                    `;
+                }
+            });
+            
+            dropdownMenu.innerHTML = html;
+        }
+
+        function initializeAssetTypeDropdown() {
+            const availableAssetTypes = getAvailableAssetTypes();
+            const dropdownMenu = document.getElementById('assetTypeDropdownMenu');
+            const assetTypeCount = Object.keys(availableAssetTypes).length;
+            
+            dropdownMenu.style.maxHeight = 'auto';
+            
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllAssetTypes(event)">
+                    <div class="dropdown-checkbox" id="selectAllAssetTypeCheckbox"></div>
+                    <span>Todos os tipos</span>
+                    <span class="dropdown-count">${assetTypeCount}</span>
+                </div>
+            `;
+            
+            Object.entries(availableAssetTypes).forEach(([assetType, count]) => {
+                html += `
+                    <div class="dropdown-item" onclick="toggleAssetType(event, '${assetType}')">
+                        <div class="dropdown-checkbox" id="assetType_${assetType}"></div>
+                        <span>${assetType}</span>
+                        <span class="dropdown-count">${count}</span>
+                    </div>
+                `;
+            });
+            
+            dropdownMenu.innerHTML = html;
+        }
+
+        function toggleSetup(event, setup) {
+            event.stopPropagation();
+            const setupId = setup.replace(/\s+/g, '_').replace(/\./g, '_');
+            const checkbox = document.getElementById(`setup_${setupId}`);
+            
+            const index = selectedSetups.indexOf(setup);
+            if (index > -1) {
+                selectedSetups.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedSetups.push(setup);
+                checkbox.classList.add('checked');
+            }
+            
+            updateSetupDropdownText();
+            updateSelectAllSetupCheckbox();
+            applyFilters();
+        }
+
+        function toggleAllSetups(event) {
+            event.stopPropagation();
+            const availableSetups = Object.keys(getAvailableSetups());
+            const selectAllCheckbox = document.getElementById('selectAllSetupCheckbox');
+            
+            if (selectedSetups.length === availableSetups.length) {
+                selectedSetups = [];
+                document.querySelectorAll('#setupDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedSetups = [...availableSetups];
+                document.querySelectorAll('#setupDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+            
+            updateSetupDropdownText();
+            applyFilters();
+        }
+
+        function toggleQuality(event, quality) {
+            event.stopPropagation();
+            const checkbox = document.getElementById(`quality_${quality}`);
+            
+            const index = selectedQualities.indexOf(quality);
+            if (index > -1) {
+                selectedQualities.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedQualities.push(quality);
+                checkbox.classList.add('checked');
+            }
+            
+            updateQualityDropdownText();
+            updateSelectAllQualityCheckbox();
+            applyFilters();
+        }
+
+        function toggleAllQualities(event) {
+            event.stopPropagation();
+            const availableQualities = Object.keys(getAvailableQualities());
+            const selectAllCheckbox = document.getElementById('selectAllQualityCheckbox');
+            
+            if (selectedQualities.length === availableQualities.length) {
+                selectedQualities = [];
+                document.querySelectorAll('#qualityDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedQualities = [...availableQualities];
+                document.querySelectorAll('#qualityDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+            
+            updateQualityDropdownText();
+            applyFilters();
+        }
+
+        function toggleAssetType(event, assetType) {
+            event.stopPropagation();
+            const checkbox = document.getElementById(`assetType_${assetType}`);
+            
+            const index = selectedAssetTypes.indexOf(assetType);
+            if (index > -1) {
+                selectedAssetTypes.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedAssetTypes.push(assetType);
+                checkbox.classList.add('checked');
+            }
+            
+            updateAssetTypeDropdownText();
+            updateSelectAllAssetTypeCheckbox();
+            applyFilters();
+        }
+
+        function toggleAllAssetTypes(event) {
+            event.stopPropagation();
+            const availableAssetTypes = Object.keys(getAvailableAssetTypes());
+            const selectAllCheckbox = document.getElementById('selectAllAssetTypeCheckbox');
+            
+            if (selectedAssetTypes.length === availableAssetTypes.length) {
+                selectedAssetTypes = [];
+                document.querySelectorAll('#assetTypeDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedAssetTypes = [...availableAssetTypes];
+                document.querySelectorAll('#assetTypeDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+            
+            updateAssetTypeDropdownText();
+            applyFilters();
+        }
+
+        function updateSelectAllSetupCheckbox() {
+            const availableSetups = Object.keys(getAvailableSetups());
+            const selectAllCheckbox = document.getElementById('selectAllSetupCheckbox');
+            
+            if (selectedSetups.length === availableSetups.length) {
+                selectAllCheckbox.classList.add('checked');
+            } else {
+                selectAllCheckbox.classList.remove('checked');
+            }
+        }
+
+        function updateSelectAllQualityCheckbox() {
+            const availableQualities = Object.keys(getAvailableQualities());
+            const selectAllCheckbox = document.getElementById('selectAllQualityCheckbox');
+            
+            if (selectedQualities.length === availableQualities.length) {
+                selectAllCheckbox.classList.add('checked');
+            } else {
+                selectAllCheckbox.classList.remove('checked');
+            }
+        }
+
+        function updateSelectAllAssetTypeCheckbox() {
+            const availableAssetTypes = Object.keys(getAvailableAssetTypes());
+            const selectAllCheckbox = document.getElementById('selectAllAssetTypeCheckbox');
+            
+            if (selectedAssetTypes.length === availableAssetTypes.length) {
+                selectAllCheckbox.classList.add('checked');
+            } else {
+                selectAllCheckbox.classList.remove('checked');
+            }
+        }
+
+        function updateSetupDropdownText() {
+            const text = document.getElementById('setupDropdownText');
+            
+            if (selectedSetups.length === 0 || selectedSetups.length === Object.keys(getAvailableSetups()).length) {
+                text.textContent = 'Todos os setups';
+            } else if (selectedSetups.length === 1) {
+                text.textContent = selectedSetups[0];
+            } else {
+                text.textContent = `${selectedSetups.length} setups selecionados`;
+            }
+        }
+
+        function updateQualityDropdownText() {
+            const text = document.getElementById('qualityDropdownText');
+            
+            if (selectedQualities.length === 0 || selectedQualities.length === Object.keys(getAvailableQualities()).length) {
+                text.textContent = 'Todas as qualidades';
+            } else if (selectedQualities.length === 1) {
+                text.textContent = getQualityIcon(selectedQualities[0]) + ' ' + selectedQualities[0];
+            } else {
+                text.textContent = `${selectedQualities.length} selecionadas`;
+            }
+        }
+
+        function updateAssetTypeDropdownText() {
+            const text = document.getElementById('assetTypeDropdownText');
+            
+            if (selectedAssetTypes.length === 0 || selectedAssetTypes.length === Object.keys(getAvailableAssetTypes()).length) {
+                text.textContent = 'Todos os tipos';
+            } else if (selectedAssetTypes.length === 1) {
+                text.textContent = selectedAssetTypes[0];
+            } else {
+                text.textContent = `${selectedAssetTypes.length} tipos selecionados`;
+            }
+        }
+
+        // ============================
+        // RENDERING FUNCTIONS
+        // ============================
+        function updateDashboard() {
+            const buySignals = filteredSignals.filter(s => s.signal === 'Compra').length;
+            const sellSignals = filteredSignals.filter(s => s.signal === 'Venda').length;
+            
+            document.getElementById('totalSignals').textContent = filteredSignals.length;
+            document.getElementById('buyCount').textContent = `▲ ${buySignals} Compras`;
+            document.getElementById('sellCount').textContent = `▼ ${sellSignals} Vendas`;
+            
+            const qualityCounts = {
+                'PREMIUM': 0,
+                'BOM': 0,
+                'REGULAR': 0,
+                'FRACO': 0
+            };
+            
+            filteredSignals.forEach(signal => {
+                qualityCounts[signal.quality]++;
+            });
+            
+            const qualitySummary = document.getElementById('qualitySummary');
+            qualitySummary.innerHTML = `
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300">💎 Premium</span>
+                    <span class="font-bold text-white">${qualityCounts.PREMIUM}</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300">⭐ Bom</span>
+                    <span class="font-bold text-white">${qualityCounts.BOM}</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300">⚡ Regular</span>
+                    <span class="font-bold text-white">${qualityCounts.REGULAR}</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                    <span class="text-gray-300">⚠️ Fraco</span>
+                    <span class="font-bold text-white">${qualityCounts.FRACO}</span>
+                </div>
+            `;
+            
+            const setupCounts = {};
+            filteredSignals.forEach(signal => {
+                setupCounts[signal.setup] = (setupCounts[signal.setup] || 0) + 1;
+            });
+            
+            const setupSummary = document.getElementById('setupSummary');
+            const activeCount = Object.keys(setupCounts).length;
+            document.getElementById('activeSetupsCount').textContent = activeCount;
+            
+            // Mostrar apenas os 3 setups com maior número
+            const topSetups = Object.entries(setupCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3);
+            
+            setupSummary.innerHTML = topSetups.map(([setup, count]) => {
+                const shortName = setup.replace('Larry Williams ', 'LW ').replace('Rompimento de ', 'Romp. ');
+                return `
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-300 truncate" title="${setup}">${shortName}</span>
+                        <span class="font-bold text-white">${count}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderQuickFilters() {
+            const container = document.getElementById('quickFilters');
+            const tags = [
+                { label: 'ALTA', class: 'bg-emerald/20 text-emerald border-emerald/30' },
+                { label: 'BAIXA', class: 'bg-red/20 text-red border-red/30' },
+                { label: 'LATERAL', class: 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30' },
+                { label: 'VOL+', class: 'bg-orange-500/20 text-orange-500 border-orange-500/30' },
+                { label: 'VOL-', class: 'bg-orange-500/10 text-orange-500/70 border-orange-500/20' },
+                { label: 'RSI+', class: 'bg-teal-500/20 text-teal-400 border-teal-500/30' },
+                { label: 'RSI-', class: 'bg-rose-500/20 text-rose-400 border-rose-500/30' },
+                { label: 'Ação', class: 'bg-blue-600/20 text-blue-400 border-blue-600/30' },
+                { label: 'BDR', class: 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30' },
+                { label: 'ETF', class: 'bg-sky-600/20 text-sky-400 border-sky-600/30' },
+                { label: 'DOM', class: 'bg-lime-500/20 text-lime-400 border-lime-500/30' },
+                { label: 'EXP', class: 'bg-cyan-100/20 text-cyan-300 border-cyan-100/30' }
+            ];
+
+            container.innerHTML = tags.map(tag => `
+                <div class="tooltip">
+                    <button class="tag-pill ${tag.class} hover:scale-105 transition-all" 
+                            onclick="toggleQuickFilter('${tag.label}')">
+                        ${tag.label}
+                    </button>
+                    <div class="tooltip-content">${tagDescriptions[tag.label]}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderSignals(signalsToRender) {
+            const container = document.getElementById('signalsGrid');
+            
+            if (signalsToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16">
+                        <i class="fas fa-search text-4xl text-gray-600 mb-4"></i>
+                        <h3 class="text-xl font-display font-bold text-gray-400 mb-2">Nenhum sinal encontrado</h3>
+                        <p class="text-sm text-gray-500">Ajuste os filtros para encontrar oportunidades</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = signalsToRender.map(signal => {
+                const qualityIcon = getQualityIcon(signal.quality);
+                const signalColor = signal.signal === 'Compra' ? 'emerald' : 'red';
+                const signalIcon = signal.signal === 'Compra' ? 'arrow-trend-up' : 'arrow-trend-down';
+                const assetTypeClass = getAssetTypeColor(signal.assetType);
+                const tagsArray = signal.tags.split(' ');
+                
+                return `
+                    <div class="glass rounded-2xl p-6 card-premium">
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <h3 class="text-xl font-display font-bold text-white">${signal.ticker}</h3>
+                                    <span class="text-xs px-2 py-1 rounded-full bg-${signalColor}/20 text-${signalColor} font-semibold">
+                                        <i class="fas fa-${signalIcon} mr-1"></i>${signal.signal}
+                                    </span>
+                                    <span class="tag-pill ${assetTypeClass}">
+                                        ${signal.assetType}
+                                    </span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs px-2 py-1 rounded-lg bg-dark-lighter border border-gray-border">
+                                        ${qualityIcon} ${signal.quality}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold font-display text-white">R$ ${signal.ultimo}</div>
+                                <div class="text-xs mt-1">
+                                    <span class="px-2 py-1 rounded ${getScoreColorClass(signal.score)} font-semibold">
+                                        Score: ${signal.score}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 pb-4 border-b border-gray-border">
+                            <div class="text-xs text-gray-400 mb-1">Setup</div>
+                            <div class="text-sm font-medium text-white">${signal.setup}</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-emerald/10 rounded-lg p-3 border border-emerald/20">
+                                <div class="text-xs text-emerald mb-2 font-semibold">
+                                    <i class="fas fa-bullseye mr-1"></i> Alvos
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="text-xs text-gray-300">${signal.gain1}</div>
+                                    ${signal.gain2 !== 'N/A' ? `<div class="text-xs text-gray-300">${signal.gain2}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="bg-red/10 rounded-lg p-3 border border-red/20">
+                                <div class="text-xs text-red mb-2 font-semibold">
+                                    <i class="fas fa-shield-alt mr-1"></i> Proteção
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="text-xs text-gray-300">${signal.loss1}</div>
+                                    ${signal.loss2 !== 'N/A' ? `<div class="text-xs text-gray-300">${signal.loss2}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-1">
+                            ${tagsArray.filter(tag => tag && tag !== signal.assetType).map(tag => {
+                                const tagClass = getTagClass(tag);
+                                const tagDescription = getTagDescription(tag);
+                                return `
+                                    <div class="tooltip">
+                                        <span class="tag-pill ${tagClass}">${tag}</span>
+                                        ${tagDescription ? `<div class="tooltip-content">${tagDescription}</div>` : ''}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            updateDashboard();
+        }
+
+        function renderTabContent(tab) {
+            const container = document.getElementById('tabContent');
+            const content = {
+                overview: `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">Sistema de Análise Técnica</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Nossa plataforma utiliza algoritmos avançados de machine learning combinados com indicadores técnicos clássicos para identificar as melhores oportunidades de trading no mercado brasileiro.
+                            </p>
+                            <div class="space-y-3">
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-emerald mt-1"></i>
+                                    <div>
+                                        <div class="font-medium text-white">Múltiplas Estratégias</div>
+                                        <div class="text-xs text-gray-400">Combinação de setups clássicos validados</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-emerald mt-1"></i>
+                                    <div>
+                                        <div class="font-medium text-white">Score Inteligente</div>
+                                        <div class="text-xs text-gray-400">Pontuação de 0-100 baseada em múltiplos fatores</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-check-circle text-emerald mt-1"></i>
+                                    <div>
+                                        <div class="font-medium text-white">Gestão de Risco</div>
+                                        <div class="text-xs text-gray-400">Stops e alvos calculados por ATR</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">Níveis de Qualidade</h3>
+                            <div class="space-y-3">
+                                <div class="glass rounded-lg p-4 border-l-4 border-emerald">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-semibold text-white">💎 PREMIUM</div>
+                                            <div class="text-xs text-gray-400">Score 80-100</div>
+                                        </div>
+                                        <div class="text-sm font-bold text-emerald">Máxima Confiança</div>
+                                    </div>
+                                </div>
+                                <div class="glass rounded-lg p-4 border-l-4 border-blue">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-semibold text-white">⭐ BOM</div>
+                                            <div class="text-xs text-gray-400">Score 65-79</div>
+                                        </div>
+                                        <div class="text-sm font-bold text-blue">Alta Confiança</div>
+                                    </div>
+                                </div>
+                                <div class="glass rounded-lg p-4 border-l-4 border-yellow-500">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-semibold text-white">⚡ REGULAR</div>
+                                            <div class="text-xs text-gray-400">Score 45-64</div>
+                                        </div>
+                                        <div class="text-sm font-bold text-yellow-500">Média Confiança</div>
+                                    </div>
+                                </div>
+                                <div class="glass rounded-lg p-4 border-l-4 border-red">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-semibold text-white">⚠️ FRACO</div>
+                                            <div class="text-xs text-gray-400">Score 0-44</div>
+                                        </div>
+                                        <div class="text-sm font-bold text-red">Baixa Confiança</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                tags: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">📋 Sistema de Tags (Etiquetas)</h3>
+                            <p class="text-sm text-gray-400 mb-6">
+                                Nosso sistema utiliza tags inteligentes para classificar rapidamente as características de cada oportunidade. 
+                                Cada tag fornece informação valiosa sobre o comportamento do ativo em relação a indicadores técnicos importantes.
+                            </p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="glass rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-3 flex items-center">
+                                    <i class="fas fa-trending-up text-blue mr-2"></i> Tags de Tendência
+                                </h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="tag-pill bg-emerald/20 text-emerald border-emerald/30">ALTA</span>
+                                        <p class="text-xs text-gray-400 mt-2">Movimento ascendente identificado - forte tendência de alta</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-red/20 text-red border-red/30">BAIXA</span>
+                                        <p class="text-xs text-gray-400 mt-2">Movimento descendente identificado - forte tendência de baixa</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-yellow-500/20 text-yellow-500 border-yellow-500/30">LATERAL</span>
+                                        <p class="text-xs text-gray-400 mt-2">Sem direção definida - mercado em consolidação</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="glass rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-3 flex items-center">
+                                    <i class="fas fa-chart-bar text-orange-500 mr-2"></i> Tags de Volume
+                                </h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="tag-pill bg-orange-500/20 text-orange-500 border-orange-500/30">VOL+</span>
+                                        <p class="text-xs text-gray-400 mt-2">Volume atual acima da média de 21 períodos - forte interesse do mercado</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-orange-500/10 text-orange-500/70 border-orange-500/20">VOL-</span>
+                                        <p class="text-xs text-gray-400 mt-2">Volume atual abaixo da média de 21 períodos - baixo interesse do mercado</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="glass rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-3 flex items-center">
+                                    <i class="fas fa-tachometer-alt text-purple mr-2"></i> Tags de RSI
+                                </h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="tag-pill bg-gray-600/20 text-gray-400 border-gray-600/30">RSI[valor]</span>
+                                        <p class="text-xs text-gray-400 mt-2">Valor atual do RSI (ex: RSI45, RSI72) - mostra o nível exato do indicador</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-teal-500/20 text-teal-400 border-teal-500/30">RSI+</span>
+                                        <p class="text-xs text-gray-400 mt-2">RSI acima de sua média móvel - momentum positivo crescente</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-rose-500/20 text-rose-400 border-rose-500/30">RSI-</span>
+                                        <p class="text-xs text-gray-400 mt-2">RSI abaixo de sua média móvel - momentum negativo ou enfraquecendo</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="glass rounded-lg p-4">
+                                <h4 class="font-semibold text-white mb-3 flex items-center">
+                                    <i class="fas fa-link text-gold mr-2"></i> Tags de Correlação
+                                </h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <span class="tag-pill bg-gray-800/40 text-gray-300 border-gray-700/40">CDI[valor]</span>
+                                        <p class="text-xs text-gray-400 mt-2">Correlação com CDI. Valores altos (>50) indicam movimento similar ao CDI, valores baixos (<-50) indicam movimento contrário</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-purple-600/20 text-purple-400 border-purple-600/30">US10YT[valor]</span>
+                                        <p class="text-xs text-gray-400 mt-2">Correlação com Treasury 10Y americano. Quanto maior o número, mais o ativo acompanha o movimento dos títulos</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-green-600/20 text-green-400 border-green-600/30">USD[valor]</span>
+                                        <p class="text-xs text-gray-400 mt-2">Correlação com o Dólar. Valores positivos indicam que o ativo sobe com o dólar, negativos indicam relação inversa</p>
+                                    </div>
+                                    <div>
+                                        <span class="tag-pill bg-amber-700/20 text-amber-400 border-amber-700/30">CMDTY[valor]</span>
+                                        <p class="text-xs text-gray-400 mt-2">Correlação com Commodities. Quanto maior o valor, mais o ativo segue o movimento das commodities</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                larry: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">📊 Setup 9.1 de Larry Williams</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                O setup 9.1 de Larry Williams é uma das estratégias mais confiáveis para identificar pontos de exaustão no mercado. Baseia-se na identificação de 9 fechamentos consecutivos em uma direção específica, sinalizando potencial reversão.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="glass rounded-lg p-4 border-l-4 border-emerald">
+                                <h4 class="font-semibold text-white mb-3">🟢 Setup de Compra</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Identifica ativos cujo preço deixou de estar <strong>abaixo</strong> da MME9 e que posteriormente teve o último fechamento acima da máxima anterior</li>
+                                    <li>• Indica que os vendedores estão perdendo força (exaustão vendedora)</li>
+                                    <li>• Sinaliza potencial reversão para movimento de alta</li>
+                                    <li>• Melhor quando confirmado com divergência no RSI ou volume alto</li>
+                                </ul>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-l-4 border-red">
+                                <h4 class="font-semibold text-white mb-3">🔴 Setup de Venda</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Identifica ativos cujo preço deixou de estar <strong>acima</strong> da MME9 e que posteriormente teve o último fechamento abaixo da mínima anterior</li>
+                                    <li>• Indica que os compradores estão perdendo força (exaustão compradora)</li>
+                                    <li>• Sinaliza potencial reversão para movimento de baixa</li>
+                                    <li>• Mais eficaz em topos de alta com volume crescente</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                breakout: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">🚀 Rompimento de Suporte e Resistência</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Detecta quando o preço quebra níveis importantes de suporte ou resistência dos últimos 21 dias úteis, 
+                                sinalizando potencial mudança de tendência com força institucional.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="glass rounded-lg p-4 border-l-4 border-emerald">
+                                <h4 class="font-semibold text-white mb-3">📈 Rompimento de Resistência</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Resistência = máxima dos últimos 21 dias</li>
+                                    <li>• Preço fecha acima dessa resistência</li>
+                                    <li>• Volume alto confirma força compradora</li>
+                                    <li>• Indica potencial início de tendência de alta</li>
+                                    <li>• Melhor com volume 2-3x acima da média</li>
+                                </ul>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-l-4 border-red">
+                                <h4 class="font-semibold text-white mb-3">📉 Rompimento de Suporte</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Suporte = mínima dos últimos 21 dias</li>
+                                    <li>• Preço fecha abaixo desse suporte</li>
+                                    <li>• Volume alto confirma pressão vendedora</li>
+                                    <li>• Indica potencial início de tendência de baixa</li>
+                                    <li>• Rompimentos falsos são comuns sem volume</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                cross: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">⚔️ Golden Cross e Death Cross</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Sinais clássicos de mudança de tendência de médio/longo prazo, amplamente utilizados por investidores institucionais 
+                                e fundos de investimento globalmente.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="glass rounded-lg p-4 border-l-4 border-gold">
+                                <h4 class="font-semibold text-white mb-3">🌟 Golden Cross</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Média de 50 períodos cruza ACIMA da de 200</li>
+                                    <li>• Sinal de início de tendência de alta duradoura</li>
+                                    <li>• Historicamente precede grandes altas</li>
+                                    <li>• Muito respeitado por fundos institucionais</li>
+                                </ul>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-l-4 border-gray-border">
+                                <h4 class="font-semibold text-white mb-3">💀 Death Cross</h4>
+                                <ul class="space-y-2 text-sm text-gray-400">
+                                    <li>• Média de 50 períodos cruza ABAIXO da de 200</li>
+                                    <li>• Sinal de início de tendência de baixa</li>
+                                    <li>• Alerta para proteção de capital</li>
+                                    <li>• Pode indicar correções prolongadas</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                rsi: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">📊 RSI - Índice de Força Relativa</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Oscilador que mede a velocidade e magnitude das mudanças de preço, variando de 0 a 100. 
+                                Criado por Welles Wilder, é um dos indicadores mais utilizados no mundo para identificar reversões.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="glass rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-red mb-2">&gt; 70</div>
+                                <div class="text-sm font-semibold text-white">Sobrecompra</div>
+                                <div class="text-xs text-gray-400">Ativo "caro" - potencial queda</div>
+                            </div>
+                            <div class="glass rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-yellow-500 mb-2">30-70</div>
+                                <div class="text-sm font-semibold text-white">Zona Neutra</div>
+                                <div class="text-xs text-gray-400">Equilíbrio do mercado</div>
+                            </div>
+                            <div class="glass rounded-lg p-4 text-center">
+                                <div class="text-2xl font-bold text-emerald mb-2">&lt; 30</div>
+                                <div class="text-sm font-semibold text-white">Sobrevenda</div>
+                                <div class="text-xs text-gray-400">Ativo "barato" - potencial alta</div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                bollinger: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">📈 Bollinger Bands</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Criadas por John Bollinger, formam um canal dinâmico baseado em desvio padrão. 
+                                95% dos preços ficam dentro das bandas, tornando toques nos extremos estatisticamente significativos.
+                            </p>
+                        </div>
+                        <div class="glass rounded-lg p-4">
+                            <h4 class="font-semibold text-white mb-3">📐 Estrutura das Bandas</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-red/10 rounded-lg">
+                                    <span class="text-sm font-medium text-white">Banda Superior</span>
+                                    <span class="text-xs text-gray-400">Média + 2 Desvios Padrão</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg">
+                                    <span class="text-sm font-medium text-white">Linha Central</span>
+                                    <span class="text-xs text-gray-400">Média Móvel 20 períodos</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-emerald/10 rounded-lg">
+                                    <span class="text-sm font-medium text-white">Banda Inferior</span>
+                                    <span class="text-xs text-gray-400">Média - 2 Desvios Padrão</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                risk: `
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-4 text-white">🛡️ Sistema Inteligente de Gestão de Risco</h3>
+                            <p class="text-sm text-gray-400 mb-4">
+                                Cálculo automático de 4 níveis de preço baseados em ATR (Average True Range) e ajustados 
+                                pela qualidade do sinal, garantindo relação risco/retorno otimizada.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="glass rounded-lg p-4 border-t-4 border-emerald">
+                                <div class="text-xs font-semibold text-emerald mb-2">💎 PREMIUM</div>
+                                <div class="space-y-1 text-xs text-gray-400">
+                                    <div>Gain 1: +2.5 ATR</div>
+                                    <div>Gain 2: +3.5 ATR</div>
+                                    <div>Loss: -1.5 ATR</div>
+                                </div>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-t-4 border-blue">
+                                <div class="text-xs font-semibold text-blue mb-2">⭐ BOM</div>
+                                <div class="space-y-1 text-xs text-gray-400">
+                                    <div>Gain 1: +2.0 ATR</div>
+                                    <div>Gain 2: +3.0 ATR</div>
+                                    <div>Loss: -1.0 ATR</div>
+                                </div>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-t-4 border-yellow-500">
+                                <div class="text-xs font-semibold text-yellow-500 mb-2">⚡ REGULAR</div>
+                                <div class="space-y-1 text-xs text-gray-400">
+                                    <div>Gain 1: +1.5 ATR</div>
+                                    <div>Gain 2: +2.5 ATR</div>
+                                    <div>Loss: -0.5 ATR</div>
+                                </div>
+                            </div>
+                            <div class="glass rounded-lg p-4 border-t-4 border-red">
+                                <div class="text-xs font-semibold text-red mb-2">⚠️ FRACO</div>
+                                <div class="space-y-1 text-xs text-gray-400">
+                                    <div>Gain 1: +1.0 ATR</div>
+                                    <div>Gain 2: N/A</div>
+                                    <div>Loss: -0.5 ATR</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            };
+
+            container.innerHTML = content[tab] || content.overview;
+        }
+
+        // ============================
+        // FILTER FUNCTIONS
+        // ============================
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const signalFilter = document.getElementById('signalFilter').value;
+
+            filteredSignals = signals.filter(signal => {
+                const matchesSearch = signal.ticker.toLowerCase().includes(searchTerm);
+                const matchesSignal = signalFilter === 'all' || signal.signal === signalFilter;
+                const matchesQuality = selectedQualities.length === 0 || selectedQualities.includes(signal.quality);
+                const matchesSetup = selectedSetups.length === 0 || selectedSetups.includes(signal.setup);
+                const matchesAssetType = selectedAssetTypes.length === 0 || selectedAssetTypes.includes(signal.assetType);
+                const matchesQuickFilters = activeFilters.length === 0 || activeFilters.every(filter => signal.tags.includes(filter));
+
+                return matchesSearch && matchesSignal && matchesQuality && matchesSetup && matchesAssetType && matchesQuickFilters;
+            });
+
+            renderSignals(filteredSignals);
+            updateActiveFiltersDisplay();
+        }
+
+        function toggleQuickFilter(filter) {
+            const index = activeFilters.indexOf(filter);
+            if (index > -1) {
+                activeFilters.splice(index, 1);
+            } else {
+                activeFilters.push(filter);
+            }
+            
+            const buttons = document.querySelectorAll('#quickFilters button');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === filter) {
+                    btn.classList.toggle('filter-active');
+                }
+            });
+            
+            applyFilters();
+        }
+
+        function updateActiveFiltersDisplay() {
+            const container = document.getElementById('activeFiltersDisplay');
+            const count = document.getElementById('activeFilterCount');
+            
+            const filtersCount = activeFilters.length + 
+                (document.getElementById('searchInput').value ? 1 : 0) +
+                (document.getElementById('signalFilter').value !== 'all' ? 1 : 0) +
+                (selectedQualities.length > 0 && selectedQualities.length < Object.keys(getAvailableQualities()).length ? 1 : 0) +
+                (selectedSetups.length > 0 && selectedSetups.length < Object.keys(getAvailableSetups()).length ? 1 : 0) +
+                (selectedAssetTypes.length > 0 && selectedAssetTypes.length < Object.keys(getAvailableAssetTypes()).length ? 1 : 0);
+            
+            count.textContent = filtersCount;
+            
+            if (filtersCount === 0) {
+                container.innerHTML = '<span class="text-xs text-gray-400">Filtros ativos:</span><span class="text-xs text-gray-500 italic ml-2">Nenhum filtro aplicado</span>';
+            } else {
+                let html = '<span class="text-xs text-gray-400 mr-2">Filtros ativos:</span>';
+                
+                activeFilters.forEach(filter => {
+                    const tagClass = getTagClass(filter);
+                    html += `
+                        <span class="tag-pill ${tagClass} cursor-pointer" onclick="toggleQuickFilter('${filter}')">
+                            ${filter} <i class="fas fa-times ml-1 text-xs"></i>
+                        </span>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+        }
+
+        function clearAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('signalFilter').value = 'all';
+            selectedQualities = [];
+            selectedSetups = [];
+            selectedAssetTypes = [];
+            activeFilters = [];
+            
+            document.querySelectorAll('.dropdown-checkbox').forEach(cb => {
+                cb.classList.remove('checked');
+            });
+            
+            document.getElementById('setupDropdownText').textContent = 'Todos os setups';
+            document.getElementById('qualityDropdownText').textContent = 'Todas as qualidades';
+            document.getElementById('assetTypeDropdownText').textContent = 'Todos os tipos';
+            
+            const buttons = document.querySelectorAll('#quickFilters button');
+            buttons.forEach(btn => btn.classList.remove('filter-active'));
+            
+            applyFilters();
+        }
+
+        // ============================
+        // SORT FUNCTIONS
+        // ============================
+        function sortByScore() {
+            filteredSignals.sort((a, b) => b.score - a.score);
+            renderSignals(filteredSignals);
+        }
+
+        function sortByTicker() {
+            filteredSignals.sort((a, b) => a.ticker.localeCompare(b.ticker));
+            renderSignals(filteredSignals);
+        }
+
+        // ============================
+        // UI FUNCTIONS
+        // ============================
+        function toggleFilters() {
+            const container = document.getElementById('filtersContainer');
+            const toggle = document.getElementById('filterToggle');
+            
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                toggle.classList.remove('fa-chevron-down');
+                toggle.classList.add('fa-chevron-up');
+            } else {
+                container.style.display = 'none';
+                toggle.classList.remove('fa-chevron-up');
+                toggle.classList.add('fa-chevron-down');
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================
+        // EVENT LISTENERS
+        // ============================
+        function setupEventListeners() {
+            // Filter inputs
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('signalFilter').addEventListener('change', applyFilters);
+
+            // Setup dropdown toggle
+            document.getElementById('setupDropdownToggle').addEventListener('click', function() {
+                const menu = document.getElementById('setupDropdownMenu');
+                const icon = document.getElementById('setupDropdownIcon');
+                
+                // Close other dropdowns
+                document.getElementById('qualityDropdownMenu').classList.remove('show');
+                document.getElementById('qualityDropdownIcon').classList.remove('open');
+                document.getElementById('qualityDropdownToggle').classList.remove('active');
+                document.getElementById('assetTypeDropdownMenu').classList.remove('show');
+                document.getElementById('assetTypeDropdownIcon').classList.remove('open');
+                document.getElementById('assetTypeDropdownToggle').classList.remove('active');
+                
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                    icon.classList.remove('open');
+                    this.classList.remove('active');
+                } else {
+                    menu.classList.add('show');
+                    icon.classList.add('open');
+                    this.classList.add('active');
+                }
+            });
+
+            // Quality dropdown toggle
+            document.getElementById('qualityDropdownToggle').addEventListener('click', function() {
+                const menu = document.getElementById('qualityDropdownMenu');
+                const icon = document.getElementById('qualityDropdownIcon');
+                
+                // Close other dropdowns
+                document.getElementById('setupDropdownMenu').classList.remove('show');
+                document.getElementById('setupDropdownIcon').classList.remove('open');
+                document.getElementById('setupDropdownToggle').classList.remove('active');
+                document.getElementById('assetTypeDropdownMenu').classList.remove('show');
+                document.getElementById('assetTypeDropdownIcon').classList.remove('open');
+                document.getElementById('assetTypeDropdownToggle').classList.remove('active');
+                
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                    icon.classList.remove('open');
+                    this.classList.remove('active');
+                } else {
+                    menu.classList.add('show');
+                    icon.classList.add('open');
+                    this.classList.add('active');
+                }
+            });
+
+            // Asset Type dropdown toggle
+            document.getElementById('assetTypeDropdownToggle').addEventListener('click', function() {
+                const menu = document.getElementById('assetTypeDropdownMenu');
+                const icon = document.getElementById('assetTypeDropdownIcon');
+                
+                // Close other dropdowns
+                document.getElementById('setupDropdownMenu').classList.remove('show');
+                document.getElementById('setupDropdownIcon').classList.remove('open');
+                document.getElementById('setupDropdownToggle').classList.remove('active');
+                document.getElementById('qualityDropdownMenu').classList.remove('show');
+                document.getElementById('qualityDropdownIcon').classList.remove('open');
+                document.getElementById('qualityDropdownToggle').classList.remove('active');
+                
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                    icon.classList.remove('open');
+                    this.classList.remove('active');
+                } else {
+                    menu.classList.add('show');
+                    icon.classList.add('open');
+                    this.classList.add('active');
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                const dropdowns = document.querySelectorAll('.dropdown-custom');
+                let clickedInside = false;
+                
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.contains(e.target)) {
+                        clickedInside = true;
+                    }
+                });
+                
+                if (!clickedInside) {
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                    document.querySelectorAll('.dropdown-icon').forEach(icon => {
+                        icon.classList.remove('open');
+                    });
+                    document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                        toggle.classList.remove('active');
+                    });
+                }
+            });
+
+            // Tab navigation
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabBtns.forEach(b => {
+                        b.classList.remove('text-white', 'border-b-2', 'border-gold');
+                        b.classList.add('text-gray-400');
+                    });
+                    this.classList.remove('text-gray-400');
+                    this.classList.add('text-white', 'border-b-2', 'border-gold');
+                    renderTabContent(this.dataset.tab);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
