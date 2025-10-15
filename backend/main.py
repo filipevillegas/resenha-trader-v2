@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from datetime import datetime
 import os
 
@@ -30,19 +29,20 @@ app.include_router(
     tags=["Sinais"]
 )
 
-# Servir frontend
+# Servir arquivos estáticos (frontend)
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "public")
 
-try:
-    app.mount("/static", StaticFiles(directory=frontend_path), name="static")
-except:
-    print("⚠️ Pasta frontend não encontrada - API funcionando sem frontend")
+# Verificar se o diretório existe
+if os.path.exists(frontend_path):
+    # Montar arquivos estáticos com suporte a HTML
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
+    print(f"✅ Servindo arquivos de: {frontend_path}")
+else:
+    print(f"❌ Diretório frontend não encontrado: {frontend_path}")
 
-@app.get("/")
-async def pagina_inicial():
-    try:
-        return FileResponse(os.path.join(frontend_path, "index.html"))
-    except:
+    # Fallback: retornar JSON se não houver frontend
+    @app.get("/")
+    async def pagina_inicial():
         return {
             "mensagem": "Bem-vindo ao Resenha Trader API!",
             "versao": "1.0.0",
