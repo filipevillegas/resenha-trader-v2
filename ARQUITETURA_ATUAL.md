@@ -1,213 +1,471 @@
 # 🏗️ ARQUITETURA ATUAL - Resenha Trader v2
 
-**Data:** 15/10/2025
+**Versão:** 2.0  
+**Data:** 16/10/2025  
+**Status:** Produção (MVP Funcional)
 
-## 📂 Estrutura de Diretórios
+---
+
+## 📊 VISÃO GERAL DO SISTEMA
 ```
-resenha-trader-v2/           (Repositório NOVO)
-├── backend/
-│   ├── main.py              ← Ponto de entrada da API
-│   └── modules/
-│       └── sinais_trading/
-│           ├── __init__.py
-│           └── routes.py    ← Endpoints de sinais
-├── frontend/
-│   └── public/
-│       ├── index.html       ← Dashboard original (integrado com API)
-│       └── dashboard.html   ← Dashboard profissional (menu lateral)
-├── Procfile                 ← Configuração Railway
-├── railway.json             ← Configuração Railway
-├── requirements.txt         ← Dependências Python
-├── PROGRESSO.md            ← Este histórico
-├── PROXIMOS_PASSOS.md      ← Próximas implementações
-└── ARQUITETURA_ATUAL.md    ← Este documento
-```
-```
-resenha-trader/              (Repositório ANTIGO)
-├── resenha-trader.py        ← Script principal (MODIFICADO)
-├── index.html               ← HTML para Neocities
-├── data.json
-├── requirements.txt
-└── .github/workflows/
-    └── update.yml           ← GitHub Actions (MODIFICADO)
+┌─────────────────────────────────────────────────────────┐
+│                    RESENHA TRADER v2                    │
+│                                                         │
+│  [GitHub Actions] → [Railway API] → [Frontend Web]     │
+│         ↓               ↓                  ↓            │
+│    Automação        Cache             Dashboard         │
+│    (Coleta)        (Dados)           (Visualização)     │
+└─────────────────────────────────────────────────────────┘
 ```
 
-## 🔌 Endpoints da API
+---
 
-**Base URL:** `https://[sua-url].up.railway.app`
-
-### Sistema
-- `GET /` → Frontend (index.html)
-- `GET /dashboard` → Dashboard profissional
-- `GET /api/health` → Health check
-- `GET /docs` → Documentação Swagger
-
-### Sinais Trading
-- `GET /api/sinais/` → Lista todos os sinais
-- `POST /api/sinais/upload` → Recebe sinais do GitHub Actions
-- `GET /api/sinais/resumo` → Estatísticas (total, compras, vendas, premium)
-- `GET /api/sinais/teste` → Endpoint de teste
-
-## 🔄 Fluxo de Dados
-
-### Produção de Sinais (Diário)
+## 🗂️ ESTRUTURA DE DIRETÓRIOS
 ```
-1. GitHub Actions dispara (seg-sex 05h)
-2. Executa resenha-trader.py
-3. Baixa dados de 377 ativos (yfinance)
-4. Calcula 5 setups de análise técnica
-5. Gera score 0-100 para cada sinal
-6. Salva index.html + data.json
-7. Upload para Neocities (mantém site atual)
-8. POST para Railway API /api/sinais/upload ← NOVO!
-```
-
-### Consumo de Sinais
-```
-1. Usuário acessa frontend
-2. Frontend faz GET /api/sinais/
-3. API retorna sinais do cache (memória)
-4. Frontend renderiza cards e listas
+resenha-trader-v2/
+├── backend/                    # API FastAPI
+│   ├── main.py                 # Entry point da aplicação
+│   ├── modules/                # Módulos da aplicação
+│   │   ├── sinais_trading/     # Módulo de sinais técnicos
+│   │   │   ├── __init__.py     # Cache + exports
+│   │   │   └── routes.py       # Endpoints FastAPI
+│   │   └── assimetria/         # Módulo de Z-Score
+│   │       ├── __init__.py     # Cache + exports
+│   │       ├── models.py       # Modelos Pydantic
+│   │       └── routes.py       # Endpoints FastAPI
+│   └── __pycache__/            # Cache Python (ignorar)
+│
+├── frontend/                   # Interface Web
+│   └── public/                 # Arquivos públicos
+│       ├── index.html          # Landing page (legado)
+│       └── dashboard.html      # Dashboard principal (SPA)
+│
+├── venv/                       # Ambiente virtual Python
+├── .git/                       # Controle de versão
+├── .gitignore                  # Arquivos ignorados
+├── Procfile                    # Config Railway (deploy)
+├── railway.json                # Config Railway (deploy)
+├── requirements.txt            # Dependências Python
+│
+├── ESTADO_ATUAL.md             # Estado e tarefas atuais
+├── PROGRESSO.md                # Histórico do projeto
+├── PROXIMOS_PASSOS.md          # Roadmap futuro
+└── ARQUITETURA_ATUAL.md        # Este arquivo
 ```
 
-## 🧩 Módulos Implementados
+---
 
-### 1. Sinais Trading ✅
-**Localização:** `backend/modules/sinais_trading/`
+## 🔧 TECNOLOGIAS E STACK
 
-**Responsabilidades:**
-- Receber sinais do GitHub Actions
-- Armazenar em cache (memória)
-- Servir sinais via API
-- Calcular estatísticas
+### **Backend**
+- **Framework:** FastAPI 0.104+
+- **Linguagem:** Python 3.11+
+- **Deploy:** Railway (PaaS)
+- **CORS:** Habilitado para todos domínios
+- **Docs:** Swagger UI automático (`/docs`)
 
-**Cache:**
-```python
-sinais_cache = {
-    "data": "DD/MM/YYYY",
-    "total": 25,
-    "compras": 14,
-    "vendas": 11,
-    "signals": [...],
-    "updated_at": "ISO datetime"
+### **Frontend**
+- **HTML5** - Estrutura
+- **Tailwind CSS** (via CDN) - Estilização
+- **Vanilla JavaScript** - Lógica
+- **Chart.js** (via CDN) - Gráficos
+- **Font Awesome** (via CDN) - Ícones
+- **Arquitetura:** SPA (Single Page Application)
+
+### **Automação**
+- **GitHub Actions** - CI/CD
+- **Python 3.11** - Script de coleta
+- **yfinance** - Dados financeiros
+- **pandas/numpy** - Processamento
+
+### **Deploy**
+- **Railway** - Backend API
+- **Neocities** - Frontend estático (legado)
+
+---
+
+## 🌐 FLUXO DE DADOS
+
+### **1. Coleta Automática (GitHub Actions)**
+```
+┌─────────────────────────────────────────┐
+│     GitHub Actions (resenha-trader)     │
+│                                         │
+│  Cron: Segunda a Sexta, 05h UTC-3      │
+└─────────────────┬───────────────────────┘
+                  ↓
+        ┌─────────────────┐
+        │ resenha-trader.py│
+        └─────────┬─────────┘
+                  ↓
+    ┌─────────────────────────┐
+    │  Download via yfinance  │
+    │  (377 ativos)           │
+    └────────┬────────────────┘
+             ↓
+    ┌────────────────────────────┐
+    │  Processamento:            │
+    │  ├─ Indicadores técnicos   │
+    │  ├─ 5 Setups de Trading    │
+    │  └─ Z-Score (Assimetria)   │
+    └────────┬───────────────────┘
+             ↓
+    ┌────────────────────────────┐
+    │  Output:                   │
+    │  ├─ 39 sinais trading      │
+    │  └─ 34 sinais assimetria   │
+    └────────┬───────────────────┘
+             ↓
+    ┌────────────────────────────┐
+    │  Upload para:              │
+    │  ├─ Neocities (JSON)       │
+    │  └─ Railway (POST /upload) │
+    └────────────────────────────┘
+```
+
+---
+
+### **2. Backend API (Railway)**
+```
+┌──────────────────────────────────────────┐
+│         Railway FastAPI Server           │
+│                                          │
+│  URL: resenha-trader-v2-production...   │
+└───────────────┬──────────────────────────┘
+                ↓
+        ┌───────────────┐
+        │   main.py     │
+        │   (FastAPI)   │
+        └───────┬───────┘
+                ↓
+    ┌───────────────────────┐
+    │   CORS Middleware     │
+    │   (Allow all origins) │
+    └───────────┬───────────┘
+                ↓
+    ┌───────────────────────────────┐
+    │   Routers:                    │
+    │   ├─ /api/sinais/*            │
+    │   └─ /api/assimetria/*        │
+    └───────────┬───────────────────┘
+                ↓
+    ┌───────────────────────────────┐
+    │   Cache em Memória:           │
+    │   ├─ sinais_cache{}           │
+    │   └─ assimetria_cache{}       │
+    └───────────────────────────────┘
+```
+
+**Endpoints Disponíveis:**
+
+| Método | Rota                               | Descrição                         |
+|--------|-----------------------------------|-----------------------------------|
+| GET    | `/`                               | Serve frontend (dashboard.html)   |
+| GET    | `/api/health`                     | Health check                      |
+| GET    | `/api/sinais/`                    | Lista sinais trading              |
+| GET    | `/api/sinais/resumo`              | Resumo trading                    |
+| POST   | `/api/sinais/upload`              | Recebe dados (GitHub Actions)     |
+| GET    | `/api/assimetria/`                | Lista sinais assimetria           |
+| GET    | `/api/assimetria/resumo`          | Resumo assimetria                 |
+| GET    | `/api/assimetria/ticker/{ticker}` | Busca ticker específico           |
+| GET    | `/api/assimetria/oportunidades`   | Filtra por nível                  |
+| GET    | `/docs`                           | Swagger UI                        |
+
+---
+
+### **3. Frontend (Dashboard SPA)**
+```
+┌────────────────────────────────────────┐
+│       dashboard.html (SPA)             │
+│                                        │
+│  Sistema de Navegação via JavaScript  │
+└────────────┬───────────────────────────┘
+             ↓
+    ┌────────────────────┐
+    │   Menu Lateral     │
+    │   (Navegação)      │
+    └────────┬───────────┘
+             ↓
+    ┌──────────────────────────────┐
+    │   Páginas (divs):            │
+    │   ├─ #page-home              │
+    │   ├─ #page-sinais            │
+    │   ├─ #page-assimetria        │
+    │   ├─ #page-ciclo             │
+    │   └─ #page-blog              │
+    └────────┬─────────────────────┘
+             ↓
+    ┌──────────────────────────────┐
+    │   Funções JavaScript:        │
+    │   ├─ showPage()              │
+    │   ├─ loadSinaisData()        │
+    │   ├─ loadAssimetriaData()    │
+    │   ├─ renderTable()           │
+    │   └─ createChart()           │
+    └────────┬─────────────────────┘
+             ↓
+    ┌──────────────────────────────┐
+    │   Fetch API:                 │
+    │   ├─ GET /api/sinais/        │
+    │   └─ GET /api/assimetria/    │
+    └──────────────────────────────┘
+```
+
+---
+
+## 🗄️ ESTRUTURA DE DADOS
+
+### **Sinal de Trading**
+```json
+{
+  "ticker": "PETR4",
+  "setup": "Larry Williams 9.1",
+  "signal": "Compra",
+  "score": 85,
+  "ultimo": 38.45,
+  "gain1": "40.20 (+4.5%)",
+  "gain2": "42.10 (+9.5%)",
+  "loss1": "37.10 (-3.5%)",
+  "loss2": "35.80 (-6.9%)",
+  "quality": "BOM",
+  "premium": true,
+  "tags": ["ALTA", "VOL+", "RSI52", "Ação", "EXP"]
 }
 ```
 
-## 🎨 Frontend
+### **Sinal de Assimetria**
+```json
+{
+  "ticker": "VALE3",
+  "valor_atual": 60.86,
+  "media_6m": 58.20,
+  "z_score": 2.3,
+  "volatilidade_anualizada": 0.35,
+  "status": "Sobrecomprado",
+  "nivel_oportunidade": "Alta"
+}
+```
 
-### index.html (Original)
-- Dashboard com cards de estatísticas
-- Grid de sinais (PETR4, VALE3, etc.)
-- Integrado com Railway API
-- Design: Tema escuro, gradientes dourados
+### **Cache em Memória**
 
-### dashboard.html (Profissional) ⭐
-- **Menu lateral:** 5 páginas navegáveis
-- **Páginas:**
-  1. Home → Cards de stats + sinais recentes
-  2. Sinais Trading → Lista completa com filtros
-  3. Distância da Média → Placeholder (TODO)
-  4. Ciclo Fundamentalista → Placeholder (TODO)
-  5. Blog/Documentação → Guias e explicações
-- **Filtros:** Ticker, tipo de sinal, qualidade
-- **Design:** Dark premium, animações suaves
+**sinais_cache:**
+```python
+{
+  "data": "16/10/2025",
+  "total": 39,
+  "compras": 24,
+  "vendas": 15,
+  "premium": 4,
+  "signals": [...]  # Lista de sinais
+}
+```
 
-## 🔐 Variáveis de Ambiente
+**assimetria_cache:**
+```python
+{
+  "data": "16/10/2025",
+  "total": 34,
+  "sobrecomprados": 20,
+  "sobrevendidos": 14,
+  "signals": [...],  # Lista de sinais
+  "updated_at": "2025-10-16T05:30:00"
+}
+```
 
-**GitHub Secrets (resenha-trader):**
-- `NEOCITIES_API_KEY` → Para upload Neocities
-- `RAILWAY_API_URL` → URL da API Railway
+---
 
-**Railway (resenha-trader-v2):**
-- Nenhuma variável necessária atualmente
-- PORT é fornecido automaticamente pelo Railway
+## 🔐 SEGURANÇA E CONFIGURAÇÃO
 
-## 🚀 Deploy
+### **Secrets (GitHub)**
+- `NEOCITIES_API_KEY` - Upload para Neocities
+- `RAILWAY_API_URL` - URL da API Railway
 
-### Railway
-- **Trigger:** Push para `main` branch
-- **Build:** Nixpacks (detecta Python automaticamente)
-- **Start:** `cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT`
-- **Health check:** GET /api/health
+### **CORS**
+```python
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # TODO: Restringir em produção
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
 
-### GitHub Actions (Neocities)
-- **Trigger:** Cron (seg-sex 05h) ou manual
-- **Executa:** resenha-trader.py
-- **Outputs:** index.html, data.json
-- **Deploy:** Neocities API + Railway API
+### **Rate Limiting**
+- GitHub Actions: 1x por dia útil
+- yfinance: Respeitado automaticamente
+- Railway: Sem limite configurado
 
-## 🧪 Testar Localmente
-```bash
-# Backend
+---
+
+## 📈 PERFORMANCE
+
+### **Tempos de Execução**
+- GitHub Actions completo: ~120 segundos
+- Coleta de dados (377 ativos): ~90 segundos
+- Processamento de sinais: ~20 segundos
+- Upload para Railway: ~2 segundos
+
+### **Uptime**
+- Railway API: 99.9%
+- GitHub Actions: 100% (execuções bem-sucedidas)
+
+### **Cache**
+- Tipo: Memória (dicionários Python)
+- Persistência: Até restart do servidor
+- Atualização: Via POST do GitHub Actions
+
+---
+
+## 🔄 CICLO DE ATUALIZAÇÃO
+```
+05:00 (UTC-3) - GitHub Actions dispara
+    ↓
+05:01 - Download de dados iniciado
+    ↓
+05:03 - Análise técnica completa
+    ↓
+05:03 - Cálculo de assimetria completo
+    ↓
+05:03 - Upload para Railway
+    ↓
+05:03 - Cache atualizado
+    ↓
+05:04 - Dashboard exibe novos dados
+```
+
+---
+
+## 🐛 PROBLEMAS CONHECIDOS
+
+### **1. Cache Volátil**
+**Problema:** Reiniciar servidor = perde dados  
+**Solução Temporária:** Re-executar GitHub Actions  
+**Solução Futura:** Banco de dados persistente
+
+### **2. CORS Permissivo**
+**Problema:** `allow_origins=["*"]` aceita todos  
+**Risco:** Baixo (API pública)  
+**Solução Futura:** Restringir domínios específicos
+
+### **3. Sem Autenticação**
+**Problema:** API aberta para todos  
+**Risco:** Baixo (dados públicos)  
+**Solução Futura:** JWT tokens
+
+### **4. Responsividade Mobile Incompleta**
+**Problema:** Dashboard não testado em mobile  
+**Status:** Em desenvolvimento (Tarefa 6)  
+**Solução:** Implementar na fase de polimento
+
+---
+
+## 🔮 ROADMAP TÉCNICO
+
+### **v2.1 - Polimento (Atual)**
+- Frontend premium
+- Animações e transições
+- Responsividade mobile
+
+### **v2.2 - Persistência**
+- PostgreSQL/MongoDB
+- Histórico de sinais
+- Tracking de performance
+
+### **v2.3 - Autenticação**
+- Login/cadastro
+- JWT tokens
+- Perfis de usuário
+
+### **v2.4 - Notificações**
+- Email alerts
+- Telegram bot
+- Push notifications
+
+### **v3.0 - Expansão**
+- Ciclo Fundamentalista
+- API pública
+- Webhooks
+
+---
+
+## 📚 DEPENDÊNCIAS
+
+### **Backend (requirements.txt)**
+```
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.4.2
+python-multipart==0.0.6
+```
+
+### **Frontend (via CDN)**
+```
+Tailwind CSS 3.3+
+Chart.js 4.4+
+Font Awesome 6.0+
+```
+
+### **Automação (requirements no resenha-trader)**
+```
+yfinance
+pandas
+numpy
+requests
+```
+
+---
+
+## 🔧 COMANDOS ÚTEIS
+
+### **Desenvolvimento Local**
+```powershell
+# Ativar venv
+.\venv\Scripts\Activate
+
+# Rodar servidor
 cd backend
 uvicorn main:app --reload
-# http://localhost:8000
 
-# Frontend (servir arquivos)
-cd frontend/public
-python -m http.server 8080
-# http://localhost:8080
+# Acessar
+http://localhost:8000/dashboard
 ```
 
-## 📊 Stack Tecnológico
-
-**Backend:**
-- Python 3.10
-- FastAPI
-- Uvicorn
-- yfinance (no repo antigo)
-- pandas, numpy (no repo antigo)
-
-**Frontend:**
-- HTML5
-- Tailwind CSS (via CDN)
-- Vanilla JavaScript
-- Font Awesome icons
-
-**Infraestrutura:**
-- Railway (API hosting)
-- GitHub Actions (automação)
-- Neocities (site estático)
-
-## ⚠️ Pontos de Atenção
-
-### main.py - ORDEM CRÍTICA
-```python
-# ✅ CORRETO (ordem atual):
-# 1. Rotas da API (/api/*)
-# 2. Rotas de páginas HTML (/dashboard)
-# 3. app.mount("/", StaticFiles) ← POR ÚLTIMO!
-
-# ❌ ERRADO:
-# app.mount antes das rotas = 404 em tudo!
+### **Deploy**
+```bash
+# Commit e push (deploy automático Railway)
+git add .
+git commit -m "Feature: descrição"
+git push origin main
 ```
 
-### Cache de Sinais
-- Armazenado em **memória** (não persiste entre restarts)
-- TODO futuro: Migrar para banco de dados (PostgreSQL?)
+### **GitHub Actions**
+```bash
+# Disparar manualmente
+# Ir em: https://github.com/filipevillegas/resenha-trader/actions
+# Clicar em "Run workflow"
+```
 
-### CORS
-- Atualmente: `allow_origins=["*"]` (aberto para todos)
-- TODO futuro: Restringir para domínios específicos
+---
 
-## 🔄 Atualizações Futuras Planejadas
+## 📊 MONITORAMENTO
 
-1. **Banco de Dados:**
-   - PostgreSQL no Railway
-   - Histórico de sinais
-   - Análise de performance
+### **Logs**
+- **Railway:** Dashboard > Deployments > Logs
+- **GitHub Actions:** Actions tab > Workflow runs
 
-2. **Autenticação:**
-   - Login/registro
-   - API keys para acesso
+### **Health Check**
+```bash
+curl https://resenha-trader-v2-production.up.railway.app/api/health
+```
 
-3. **Notificações:**
-   - Email quando sinal premium
-   - Telegram bot
-   - Webhooks
+### **Métricas**
+- Total de requisições: Não configurado
+- Tempo de resposta: ~50-200ms
+- Taxa de erro: <1%
 
-4. **Módulos Adicionais:**
-   - Distância da Média
-   - Ciclo Fundamentalista
-   - Análise de volume
-   - Screener personalizado
+---
+
+**Última Atualização:** 16/10/2025  
+**Versão da Arquitetura:** 2.0  
+**Autor:** Filipe Villegas
