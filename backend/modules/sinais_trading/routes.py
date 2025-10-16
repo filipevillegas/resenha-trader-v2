@@ -3,6 +3,9 @@ from datetime import datetime
 from typing import List, Dict, Optional
 import json
 
+# Import do cache de assimetria (dicionário, não função!)
+from modules.assimetria import assimetria_cache
+
 router = APIRouter()
 
 # Armazenamento em memória (temporário)
@@ -12,78 +15,80 @@ sinais_cache = {
     "total": 0,
     "compras": 0,
     "vendas": 0,
+    "premium": 0,
     "signals": []
 }
 
 @router.post("/upload")
-async def upload_sinais(data: Dict):
+async def upload_sinais(payload: dict):
     """
-    Recebe sinais do GitHub Actions
-    Formato esperado: {"trading_signals": [...], "assimetria_signals": [...]}
+    Recebe sinais de trading E assimetria do GitHub Actions.
+
+    Payload esperado:
+    {
+        "trading_signals": [...],      # Sinais de trading (existente)
+        "assimetria_signals": [...],   # Sinais de assimetria (NOVO)
+        "data_atualizacao": "2025-10-15T10:30:00"
+    }
     """
     global sinais_cache
 
     try:
-        # Extrair sinais de trading (compatibilidade com formato antigo)
-        if "trading_signals" in data:
-            signals = data["trading_signals"]
+        # Processar sinais de trading (EXISTENTE)
+        sinais = payload.get("trading_signals", [])
+
+        if sinais:
+            # Contar por tipo
+            compras = len([s for s in sinais if s.get("tipo") == "COMPRA" or s.get("signal") in ["Compra", "COMPRA"]])
+            vendas = len([s for s in sinais if s.get("tipo") == "VENDA" or s.get("signal") in ["Venda", "VENDA"]])
+            premium = len([s for s in sinais if s.get("premium", False) or s.get("quality") == "PREMIUM"])
+
+            # Atualizar cache de sinais de trading
+            sinais_cache["data"] = datetime.now().strftime("%d/%m/%Y")
+            sinais_cache["total"] = len(sinais)
+            sinais_cache["compras"] = compras
+            sinais_cache["vendas"] = vendas
+            sinais_cache["premium"] = premium
+            sinais_cache["signals"] = sinais
+            sinais_cache["updated_at"] = payload.get("data_atualizacao", datetime.now().isoformat())
+
+        # Processar sinais de assimetria (NOVO)
+        sinais_assimetria = payload.get("assimetria_signals", [])
+
+        if sinais_assimetria:
+            # Contar sobrecomprados e sobrevendidos
+            sobrecomprados = len([s for s in sinais_assimetria if s.get("status") == "Sobrecomprado"])
+            sobrevendidos = len([s for s in sinais_assimetria if s.get("status") == "Sobrevendido"])
+
+            # Atualizar cache de assimetria diretamente
+            assimetria_cache["data"] = datetime.now().strftime("%d/%m/%Y")
+            assimetria_cache["total"] = len(sinais_assimetria)
+            assimetria_cache["sobrecomprados"] = sobrecomprados
+            assimetria_cache["sobrevendidos"] = sobrevendidos
+            assimetria_cache["signals"] = sinais_assimetria
+            assimetria_cache["updated_at"] = payload.get("data_atualizacao", datetime.now().isoformat())
+
+            assimetria_result = {
+                "total": len(sinais_assimetria),
+                "sobrecomprados": sobrecomprados,
+                "sobrevendidos": sobrevendidos
+            }
         else:
-            # Formato antigo - lista direta
-            signals = data if isinstance(data, list) else []
+            assimetria_result = {"total": 0, "sobrecomprados": 0, "sobrevendidos": 0}
 
-        # Contar compras e vendas
-        compras = len([s for s in signals if s.get('signal') in ['Compra', 'COMPRA']])
-        vendas = len([s for s in signals if s.get('signal') in ['Venda', 'VENDA']])
-
-        # Atualizar cache de trading
-        sinais_cache = {
-            "data": datetime.now().strftime("%d/%m/%Y"),
-            "total": len(signals),
-            "compras": compras,
-            "vendas": vendas,
-            "signals": signals,
-            "updated_at": datetime.now().isoformat()
-        }
-
-        # Processar sinais de assimetria se existirem
-        assimetria_result = None
-        if "assimetria_signals" in data:
-            try:
-                from ..assimetria.routes import update_cache
-                from ..assimetria.models import AssimetriaSignal
-
-                # Converter para objetos AssimetriaSignal
-                assimetria_signals = []
-                for signal_data in data["assimetria_signals"]:
-                    assimetria_signals.append(AssimetriaSignal(**signal_data))
-
-                # Atualizar cache de assimetria
-                update_cache(assimetria_signals)
-                assimetria_result = {
-                    "total": len(assimetria_signals),
-                    "status": "success"
-                }
-            except Exception as e:
-                assimetria_result = {
-                    "total": 0,
-                    "status": f"error: {str(e)}"
-                }
-
-        response = {
-            "status": "success",
-            "message": "Sinais recebidos com sucesso!",
+        # Retornar confirmação de ambos
+        return {
+            "success": True,
+            "message": "Dados recebidos com sucesso",
             "trading": {
-                "total": len(signals),
-                "compras": compras,
-                "vendas": vendas
+                "total": len(sinais),
+                "compras": compras if sinais else 0,
+                "vendas": vendas if sinais else 0,
+                "premium": premium if sinais else 0
             },
+            "assimetria": assimetria_result,
             "timestamp": datetime.now().isoformat()
         }
-
-        if assimetria_result:
-            response["assimetria"] = assimetria_result
-
-        return response
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erro ao processar sinais: {str(e)}")
