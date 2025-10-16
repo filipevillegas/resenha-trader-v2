@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(mkdir:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

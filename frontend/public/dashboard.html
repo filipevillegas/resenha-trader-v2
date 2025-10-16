@@ -242,7 +242,23 @@
                 transform: translateY(0);
             }
         }
-        
+
+        /* Pulse animation for critical badges */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+
+        .badge-critica {
+            animation: pulse 2s infinite;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -435,26 +451,32 @@
         
         <!-- ASSIMETRIA PAGE -->
         <div class="page" id="page-assimetria">
+            <!-- Header -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-white mb-2">Assimetria (Z-Score)</h2>
+                <p class="text-gray-400">Análise de distância da média móvel de 6 meses em desvios padrão</p>
+            </div>
+
             <!-- Cards de Resumo -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <div class="card stat-card">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
                             <i class="fas fa-chart-area text-blue-500 text-xl"></i>
                         </div>
-                        <span class="text-3xl font-bold" id="assimetriaTotal">--</span>
+                        <span class="text-3xl font-bold" id="assimetria-total">-</span>
                     </div>
                     <h3 class="text-sm text-gray-400">Total de Sinais</h3>
                 </div>
 
                 <div class="card stat-card">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/10 flex items-center justify-center">
-                            <i class="fas fa-arrow-up text-green-500 text-xl"></i>
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-600/10 flex items-center justify-center">
+                            <i class="fas fa-arrow-up text-blue-600 text-xl"></i>
                         </div>
-                        <span class="text-3xl font-bold" id="sobrecomprados">--</span>
+                        <span class="text-3xl font-bold" id="assimetria-sobrecomprados">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Sobrecomprados</h3>
+                    <h3 class="text-sm text-gray-400">Sobrecompra</h3>
                 </div>
 
                 <div class="card stat-card">
@@ -462,19 +484,52 @@
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/10 flex items-center justify-center">
                             <i class="fas fa-arrow-down text-red-500 text-xl"></i>
                         </div>
-                        <span class="text-3xl font-bold" id="sobrevendidos">--</span>
+                        <span class="text-3xl font-bold" id="assimetria-sobrevendidos">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Sobrevendidos</h3>
+                    <h3 class="text-sm text-gray-400">Sobrevenda</h3>
                 </div>
 
                 <div class="card stat-card">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600/20 to-red-600/10 flex items-center justify-center">
-                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-600/20 to-orange-600/10 flex items-center justify-center">
+                            <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
                         </div>
-                        <span class="text-3xl font-bold" id="criticas">--</span>
+                        <span class="text-3xl font-bold" id="assimetria-criticas">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Críticas</h3>
+                    <h3 class="text-sm text-gray-400">Oportunidades Críticas</h3>
+                </div>
+            </div>
+
+            <!-- Gráfico de Dispersão -->
+            <div class="card mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold">Gráfico de Dispersão</h3>
+                    <div class="text-sm">
+                        <span class="text-blue-500">● Sobrecompra</span>
+                        <span class="text-red-500 ml-4">● Sobrevenda</span>
+                    </div>
+                </div>
+
+                <div class="relative bg-gray-900 rounded-lg p-4" style="height: 400px;">
+                    <canvas id="assimetriaChart"></canvas>
+                </div>
+
+                <!-- Controles do gráfico -->
+                <div class="flex items-center gap-4 mt-4">
+                    <input type="text" id="customTickersInput" placeholder="PETR4, VALE3..."
+                           class="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                    <button onclick="addCustomTickersToChart()"
+                            class="px-4 py-2 bg-gold text-dark font-medium rounded-lg hover:bg-gold-dark transition">
+                        Adicionar ao Gráfico
+                    </button>
+                    <button onclick="resetChart()"
+                            class="px-4 py-2 bg-gray-700 text-white font-medium rounded-lg hover:bg-gray-600 transition">
+                        Reset (Apenas ±2σ)
+                    </button>
+                </div>
+
+                <div class="text-xs text-gray-500 mt-2">
+                    💡 Adicione tickers customizados ao gráfico separados por vírgula
                 </div>
             </div>
 
@@ -482,53 +537,23 @@
             <div class="card mb-6">
                 <h3 class="text-lg font-bold mb-4">Filtros</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" id="searchTickerAssimetria" placeholder="Buscar ticker..."
+                    <input type="text" id="filterTicker" placeholder="Buscar ticker..." oninput="applyAssimetriaFilters()"
                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
 
-                    <select id="filterStatus" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                        <option value="">Todos</option>
-                        <option value="Sobrecomprado">Sobrecomprado</option>
-                        <option value="Sobrevendido">Sobrevendido</option>
-                        <option value="Normal">Normal</option>
+                    <select id="filterStatus" onchange="applyAssimetriaFilters()"
+                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                        <option value="">Todos os Status</option>
+                        <option value="Sobrecomprado">Sobrecompra</option>
+                        <option value="Sobrevendido">Sobrevenda</option>
                     </select>
 
-                    <select id="filterNivel" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                        <option value="">Todos os níveis</option>
+                    <select id="filterNivel" onchange="applyAssimetriaFilters()"
+                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                        <option value="">Todos os Níveis</option>
                         <option value="Crítica">🔴 Crítica</option>
-                        <option value="Alta">🟡 Alta</option>
-                        <option value="Moderada">🟢 Moderada</option>
-                        <option value="Baixa">⚪ Baixa</option>
+                        <option value="Alta">🟨 Alta</option>
+                        <option value="Moderada">🟦 Moderada</option>
                     </select>
-                </div>
-            </div>
-
-            <!-- Gráfico de Dispersão -->
-            <div class="card mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold">Gráfico de Dispersão: Volatilidade vs Z-Score</h3>
-                    <div class="text-sm text-gray-400">
-                        <span class="text-blue-500">● Sobrecomprado</span>
-                        <span class="text-red-500 ml-4">● Sobrevendido</span>
-                        <span class="text-gray-500 ml-4">● Adicionados</span>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <canvas id="assimetriaChart" width="800" height="400" class="w-full" style="max-height: 400px;"></canvas>
-                </div>
-
-                <!-- Controles do gráfico -->
-                <div class="flex items-center gap-4 mt-4">
-                    <input type="text" id="addTickerInput" placeholder="PETR4, VALE3..."
-                           class="px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none flex-1">
-                    <button onclick="addTickersToChart()"
-                            class="px-4 py-2 bg-gold text-dark rounded-lg font-medium hover:bg-gold-dark transition">
-                        Adicionar ao Gráfico
-                    </button>
-                    <button onclick="resetChart()"
-                            class="px-4 py-2 bg-gray-700 text-white rounded-lg font-medium hover:bg-gray-600 transition">
-                        Reset (±2σ)
-                    </button>
                 </div>
             </div>
 
@@ -536,28 +561,57 @@
             <div class="card">
                 <h3 class="text-lg font-bold mb-4">Sinais de Assimetria</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full" id="assimetriaTable">
+                    <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-700">
-                                <th class="text-left py-3 px-2 text-gray-400 font-medium">Ticker</th>
-                                <th class="text-right py-3 px-2 text-gray-400 font-medium">Valor Atual</th>
-                                <th class="text-right py-3 px-2 text-gray-400 font-medium">Média 6M</th>
-                                <th class="text-right py-3 px-2 text-gray-400 font-medium">Z-Score</th>
-                                <th class="text-right py-3 px-2 text-gray-400 font-medium">Volatilidade</th>
-                                <th class="text-center py-3 px-2 text-gray-400 font-medium">Status</th>
-                                <th class="text-center py-3 px-2 text-gray-400 font-medium">Nível</th>
+                                <th class="text-left py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('ticker')">
+                                    Ticker <i class="fas fa-sort text-xs ml-1"></i>
+                                </th>
+                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('valor_atual')">
+                                    Valor Atual <i class="fas fa-sort text-xs ml-1"></i>
+                                </th>
+                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('media_6m')">
+                                    Média 6M <i class="fas fa-sort text-xs ml-1"></i>
+                                </th>
+                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('z_score')">
+                                    Z-Score <i class="fas fa-sort text-xs ml-1"></i>
+                                </th>
+                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('volatilidade_anualizada')">
+                                    Volatilidade <i class="fas fa-sort text-xs ml-1"></i>
+                                </th>
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium">
+                                    Status
+                                </th>
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium">
+                                    Nível <i class="fas fa-info-circle text-xs ml-1" title="Crítica: ±3σ | Alta: ±2.5σ | Moderada: ±2σ"></i>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="assimetriaTableBody">
                             <tr>
-                                <td colspan="7" class="text-center py-8 text-gray-500">
+                                <td colspan="7" class="text-center py-8">
                                     <div class="loading mx-auto mb-4"></div>
-                                    <p>Carregando dados...</p>
+                                    <p class="text-gray-500">Carregando dados...</p>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="assimetriaLoading" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="card p-8 text-center">
+                    <div class="loading mx-auto mb-4"></div>
+                    <p class="text-white">Carregando dados de assimetria...</p>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="assimetriaEmpty" class="hidden card text-center py-16">
+                <i class="fas fa-chart-area text-6xl text-gray-600 mb-6"></i>
+                <h3 class="text-xl font-bold mb-2">Nenhum sinal de assimetria disponível</h3>
+                <p class="text-gray-400">Aguarde a próxima atualização do GitHub Actions</p>
             </div>
         </div>
         
@@ -644,9 +698,10 @@
         // ⚠️ SUBSTITUA pela sua URL do Railway!
         
         let allSignals = [];
-        let assimetriaData = [];
-        let chartInstance = null;
+        let assimetriaData = {signals: [], resumo: {}};
+        let assimetriaChart = null;
         let customTickers = [];
+        let sortDirection = {};
         
         // ============================
         // NAVEGAÇÃO
@@ -659,13 +714,13 @@
                     item.classList.add('active');
                 }
             });
-            
+
             // Atualizar páginas
             document.querySelectorAll('.page').forEach(p => {
                 p.classList.remove('active');
             });
             document.getElementById(`page-${page}`).classList.add('active');
-            
+
             // Atualizar títulos
             const titles = {
                 'home': ['Dashboard', 'Visão geral do mercado'],
@@ -674,12 +729,17 @@
                 'ciclo': ['Ciclo Fundamentalista', 'Indicadores fundamentalistas'],
                 'blog': ['Documentação', 'Guias e informações']
             };
-            
+
             if (titles[page]) {
                 document.getElementById('pageTitle').textContent = titles[page][0];
                 document.getElementById('pageSubtitle').textContent = titles[page][1];
             }
-            
+
+            // Carregar dados de assimetria quando navegar para página
+            if (page === 'assimetria' && assimetriaData.signals.length === 0) {
+                loadAssimetriaData();
+            }
+
             return false;
         }
         
@@ -808,7 +868,6 @@
         // ============================
         document.addEventListener('DOMContentLoaded', () => {
             carregarDados();
-            carregarDadosAssimetria();
 
             // Event listeners para filtros
             ['searchTicker', 'filterSignal', 'filterQuality'].forEach(id => {
@@ -818,187 +877,220 @@
                     el.addEventListener('change', renderizarTodosSinais);
                 }
             });
-
-            // Event listeners para filtros de assimetria
-            ['searchTickerAssimetria', 'filterStatus', 'filterNivel'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', renderizarTabelaAssimetria);
-                    el.addEventListener('change', renderizarTabelaAssimetria);
-                }
-            });
         });
 
         // ============================
         // FUNÇÕES DE ASSIMETRIA
         // ============================
-        async function carregarDadosAssimetria() {
+        async function loadAssimetriaData() {
             try {
-                console.log('🔄 Carregando dados de assimetria...');
+                document.getElementById('assimetriaLoading').classList.remove('hidden');
 
+                // Carregar dados completos
                 const response = await fetch(`${API_URL}/assimetria/`);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                const dados = await response.json();
-                console.log('✅ Dados de assimetria recebidos:', dados);
+                const data = await response.json();
+                console.log('✅ Dados de assimetria recebidos:', data);
 
-                assimetriaData = dados.signals || [];
+                // Carregar resumo
+                const resumoResponse = await fetch(`${API_URL}/assimetria/resumo`);
+                const resumo = await resumoResponse.json();
 
-                updateAssimetriaCards(dados);
-                renderizarTabelaAssimetria();
-                createChart(assimetriaData);
+                assimetriaData = {
+                    signals: data.signals || [],
+                    resumo: resumo
+                };
 
-            } catch (erro) {
-                console.error('❌ Erro ao carregar assimetria:', erro);
-                // Mostrar dados de exemplo se não conseguir carregar
-                assimetriaData = [];
-                updateAssimetriaCards({total: 0, sobrecomprados: 0, sobrevendidos: 0});
+                document.getElementById('assimetriaLoading').classList.add('hidden');
+
+                if (assimetriaData.signals.length === 0) {
+                    document.getElementById('assimetriaEmpty').classList.remove('hidden');
+                } else {
+                    document.getElementById('assimetriaEmpty').classList.add('hidden');
+                    updateAssimetriaCards();
+                    renderAssimetriaTable();
+                    createAssimetriaChart();
+                }
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados de assimetria:', error);
+                document.getElementById('assimetriaLoading').classList.add('hidden');
+                document.getElementById('assimetriaEmpty').classList.remove('hidden');
             }
         }
 
-        function updateAssimetriaCards(resumo) {
-            document.getElementById('assimetriaTotal').textContent = resumo.total || 0;
-            document.getElementById('sobrecomprados').textContent = resumo.sobrecomprados || 0;
-            document.getElementById('sobrevendidos').textContent = resumo.sobrevendidos || 0;
+        function updateAssimetriaCards() {
+            const resumo = assimetriaData.resumo;
+            document.getElementById('assimetria-total').textContent = resumo.total || 0;
+            document.getElementById('assimetria-sobrecomprados').textContent = resumo.sobrecomprados || 0;
+            document.getElementById('assimetria-sobrevendidos').textContent = resumo.sobrevendidos || 0;
 
             // Calcular críticas
-            const criticas = assimetriaData.filter(s => s.nivel_oportunidade === 'Crítica').length;
-            document.getElementById('criticas').textContent = criticas;
+            const criticas = assimetriaData.signals.filter(s => s.nivel_oportunidade === 'Crítica').length;
+            document.getElementById('assimetria-criticas').textContent = criticas;
         }
 
-        function renderizarTabelaAssimetria() {
+        function renderAssimetriaTable(filteredData = null) {
             const tbody = document.getElementById('assimetriaTableBody');
-            const searchTerm = (document.getElementById('searchTickerAssimetria')?.value || '').toLowerCase();
-            const filterStatus = document.getElementById('filterStatus')?.value || '';
-            const filterNivel = document.getElementById('filterNivel')?.value || '';
+            const data = filteredData || assimetriaData.signals;
 
-            let filtered = assimetriaData.filter(s => {
-                const matchSearch = !searchTerm || (s.ticker || '').toLowerCase().includes(searchTerm);
-                const matchStatus = !filterStatus || s.status === filterStatus;
-                const matchNivel = !filterNivel || s.nivel_oportunidade === filterNivel;
-                return matchSearch && matchStatus && matchNivel;
-            });
-
-            // Ordenar por Z-Score absoluto (maiores primeiro)
-            filtered.sort((a, b) => Math.abs(b.z_score) - Math.abs(a.z_score));
-
-            if (filtered.length === 0) {
+            if (data.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="7" class="text-center py-8 text-gray-500">
-                            ${assimetriaData.length === 0 ? 'Carregando dados...' : 'Nenhum sinal encontrado'}
+                            Nenhum sinal encontrado
                         </td>
                     </tr>
                 `;
                 return;
             }
 
-            tbody.innerHTML = filtered.map(signal => {
-                const statusColor = signal.status === 'Sobrecomprado' ? 'text-blue-500' :
-                                   signal.status === 'Sobrevendido' ? 'text-red-500' : 'text-gray-400';
+            tbody.innerHTML = data.map(signal => {
+                const badgeClass = getBadgeClass(signal.status, signal.nivel_oportunidade);
+                const badgeText = signal.nivel_oportunidade;
+                const badgeIcon = signal.nivel_oportunidade === 'Crítica' ? '⚠️ ' :
+                                  signal.nivel_oportunidade === 'Alta' ? '🟨 ' : '🟦 ';
 
-                const nivelEmoji = signal.nivel_oportunidade === 'Crítica' ? '🔴' :
-                                  signal.nivel_oportunidade === 'Alta' ? '🟡' :
-                                  signal.nivel_oportunidade === 'Moderada' ? '🟢' : '⚪';
+                const zscoreColor = Math.abs(signal.z_score) >= 3 ? 'text-orange-500' :
+                                   Math.abs(signal.z_score) >= 2.5 ? 'text-gold' : 'text-white';
+
+                const statusColor = signal.status === 'Sobrecomprado' ? 'text-blue-500' : 'text-red-500';
 
                 return `
-                    <tr class="border-b border-gray-800 hover:bg-gray-800/50">
-                        <td class="py-3 px-2 font-bold">${signal.ticker}</td>
-                        <td class="py-3 px-2 text-right">R$ ${signal.valor_atual.toFixed(2)}</td>
-                        <td class="py-3 px-2 text-right text-gray-400">R$ ${signal.media_6m.toFixed(2)}</td>
-                        <td class="py-3 px-2 text-right font-bold ${Math.abs(signal.z_score) > 2 ? 'text-gold' : ''}">${signal.z_score.toFixed(2)}</td>
-                        <td class="py-3 px-2 text-right">${(signal.volatilidade_anualizada * 100).toFixed(1)}%</td>
-                        <td class="py-3 px-2 text-center ${statusColor}">${signal.status}</td>
-                        <td class="py-3 px-2 text-center">${nivelEmoji} ${signal.nivel_oportunidade}</td>
+                    <tr class="border-b border-gray-800 hover:bg-gray-800/30 transition">
+                        <td class="py-3 px-4 font-bold text-white">
+                            ${signal.ticker}
+                        </td>
+                        <td class="py-3 px-4 text-right text-white">
+                            R$ ${signal.valor_atual.toFixed(2)}
+                        </td>
+                        <td class="py-3 px-4 text-right text-gray-400">
+                            R$ ${signal.media_6m.toFixed(2)}
+                        </td>
+                        <td class="py-3 px-4 text-right font-bold ${zscoreColor}">
+                            ${signal.z_score >= 0 ? '+' : ''}${signal.z_score.toFixed(2)}
+                        </td>
+                        <td class="py-3 px-4 text-right text-gray-300">
+                            ${(signal.volatilidade_anualizada * 100).toFixed(1)}%
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColor} bg-opacity-20">
+                                ${signal.status}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium ${badgeClass}">
+                                ${badgeIcon}${badgeText}
+                            </span>
+                        </td>
                     </tr>
                 `;
             }).join('');
         }
 
-        function createChart(signals) {
+        function getBadgeClass(status, nivel) {
+            if (status === 'Sobrecomprado') {
+                if (nivel === 'Crítica') return 'bg-blue-700 text-white badge-critica';
+                if (nivel === 'Alta') return 'bg-blue-600 text-white';
+                return 'bg-blue-500 text-white';
+            } else {
+                if (nivel === 'Crítica') return 'bg-red-700 text-white badge-critica';
+                if (nivel === 'Alta') return 'bg-red-600 text-white';
+                return 'bg-red-500 text-white';
+            }
+        }
+
+        function createAssimetriaChart() {
             const canvas = document.getElementById('assimetriaChart');
             if (!canvas) return;
 
             const ctx = canvas.getContext('2d');
 
             // Destruir gráfico anterior se existir
-            if (chartInstance) {
-                chartInstance.destroy();
+            if (assimetriaChart) {
+                assimetriaChart.destroy();
             }
 
-            // Filtrar apenas ±2σ inicialmente
-            const filteredSignals = signals.filter(s => Math.abs(s.z_score) >= 2);
+            // Dados base (|Z-Score| >= 2.0)
+            const baseSignals = assimetriaData.signals;
 
-            // Preparar dados
-            const sobrecomprados = filteredSignals.filter(s => s.status === 'Sobrecomprado');
-            const sobrevendidos = filteredSignals.filter(s => s.status === 'Sobrevendido');
+            // Separar sobrecomprados e sobrevendidos
+            const sobrecomprados = baseSignals.filter(s => s.status === 'Sobrecomprado');
+            const sobrevendidos = baseSignals.filter(s => s.status === 'Sobrevendido');
+
+            // Adicionar tickers customizados (em cinza)
+            const customDataset = customTickers.map(ticker => {
+                const signal = baseSignals.find(s => s.ticker.toUpperCase() === ticker.toUpperCase());
+                if (signal) {
+                    return {
+                        x: signal.volatilidade_anualizada,
+                        y: signal.z_score,
+                        ticker: signal.ticker
+                    };
+                }
+                return null;
+            }).filter(d => d !== null);
 
             const datasets = [
                 {
-                    label: 'Sobrecomprado',
+                    label: 'Sobrecompra',
                     data: sobrecomprados.map(s => ({
                         x: s.volatilidade_anualizada,
                         y: s.z_score,
                         ticker: s.ticker
                     })),
-                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
-                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
                     pointRadius: 6,
                     pointHoverRadius: 8
                 },
                 {
-                    label: 'Sobrevendido',
+                    label: 'Sobrevenda',
                     data: sobrevendidos.map(s => ({
                         x: s.volatilidade_anualizada,
                         y: s.z_score,
                         ticker: s.ticker
                     })),
-                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
-                    borderColor: 'rgb(239, 68, 68)',
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
                     pointRadius: 6,
                     pointHoverRadius: 8
                 }
             ];
 
-            // Adicionar tickers customizados se existirem
-            if (customTickers.length > 0) {
+            if (customDataset.length > 0) {
                 datasets.push({
-                    label: 'Adicionados',
-                    data: customTickers.map(s => ({
-                        x: s.volatilidade_anualizada,
-                        y: s.z_score,
-                        ticker: s.ticker
-                    })),
-                    backgroundColor: 'rgba(156, 163, 175, 0.7)',
-                    borderColor: 'rgb(156, 163, 175)',
-                    pointRadius: 6,
-                    pointHoverRadius: 8
+                    label: 'Customizados',
+                    data: customDataset,
+                    backgroundColor: 'rgba(156, 163, 175, 0.6)',
+                    borderColor: 'rgba(156, 163, 175, 1)',
+                    pointRadius: 8,
+                    pointHoverRadius: 10,
+                    pointStyle: 'triangle'
                 });
             }
 
-            chartInstance = new Chart(ctx, {
+            assimetriaChart = new Chart(ctx, {
                 type: 'scatter',
                 data: { datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        title: {
-                            display: true,
-                            text: 'Volatilidade vs Z-Score (±2σ)',
-                            color: '#fff'
-                        },
                         legend: {
-                            labels: {
-                                color: '#fff'
-                            }
+                            display: true,
+                            position: 'top',
+                            labels: { color: '#fff' }
                         },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    const point = context.parsed;
-                                    const ticker = context.raw.ticker;
-                                    return `${ticker}: Vol ${(point.x * 100).toFixed(1)}%, Z-Score ${point.y.toFixed(2)}`;
+                                    const point = context.raw;
+                                    return [
+                                        `Ticker: ${point.ticker}`,
+                                        `Z-Score: ${point.y.toFixed(2)}`,
+                                        `Volatilidade: ${(point.x * 100).toFixed(1)}%`
+                                    ];
                                 }
                             }
                         }
@@ -1010,124 +1102,142 @@
                                 text: 'Volatilidade Anualizada',
                                 color: '#fff'
                             },
-                            min: 0,
-                            max: 0.5,
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
                             ticks: {
                                 color: '#9ca3af',
                                 callback: function(value) {
                                     return (value * 100).toFixed(0) + '%';
                                 }
                             },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            }
+                            min: 0,
+                            max: 0.6
                         },
                         y: {
                             title: {
                                 display: true,
-                                text: 'Z-Score',
+                                text: 'Z-Score (Desvios Padrão)',
                                 color: '#fff'
                             },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            ticks: { color: '#9ca3af' },
                             min: -4,
-                            max: 4,
-                            ticks: {
-                                color: '#9ca3af'
-                            },
-                            grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
-                            }
+                            max: 4
                         }
-                    },
-                    backgroundColor: 'rgba(10, 10, 10, 0.9)'
-                }
-            });
-
-            // Adicionar linhas de referência
-            addReferenceLines();
-        }
-
-        function addReferenceLines() {
-            // Função para adicionar linhas de referência (±2σ, ±3σ, y=0)
-            if (!chartInstance) return;
-
-            const chart = chartInstance;
-            const ctx = chart.ctx;
-            const chartArea = chart.chartArea;
-
-            chart.options.plugins.annotation = {
-                annotations: {
-                    line1: {
-                        type: 'line',
-                        yMin: 0,
-                        yMax: 0,
-                        borderColor: 'rgba(255, 215, 0, 0.5)',
-                        borderWidth: 2,
-                        borderDash: [5, 5]
-                    },
-                    line2: {
-                        type: 'line',
-                        yMin: 2,
-                        yMax: 2,
-                        borderColor: 'rgba(59, 130, 246, 0.5)',
-                        borderWidth: 1,
-                        borderDash: [5, 5]
-                    },
-                    line3: {
-                        type: 'line',
-                        yMin: -2,
-                        yMax: -2,
-                        borderColor: 'rgba(239, 68, 68, 0.5)',
-                        borderWidth: 1,
-                        borderDash: [5, 5]
-                    },
-                    line4: {
-                        type: 'line',
-                        yMin: 3,
-                        yMax: 3,
-                        borderColor: 'rgba(59, 130, 246, 0.3)',
-                        borderWidth: 1,
-                        borderDash: [2, 2]
-                    },
-                    line5: {
-                        type: 'line',
-                        yMin: -3,
-                        yMax: -3,
-                        borderColor: 'rgba(239, 68, 68, 0.3)',
-                        borderWidth: 1,
-                        borderDash: [2, 2]
                     }
-                }
-            };
+                },
+                plugins: [{
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const yAxis = chart.scales.y;
+                        const xAxis = chart.scales.x;
+
+                        // Linhas de referência
+                        ctx.save();
+                        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([5, 5]);
+
+                        // Linha y=0
+                        ctx.beginPath();
+                        ctx.moveTo(xAxis.left, yAxis.getPixelForValue(0));
+                        ctx.lineTo(xAxis.right, yAxis.getPixelForValue(0));
+                        ctx.stroke();
+
+                        // Linhas y=±2
+                        ctx.strokeStyle = 'rgba(34, 197, 94, 0.5)';
+                        ctx.beginPath();
+                        ctx.moveTo(xAxis.left, yAxis.getPixelForValue(2));
+                        ctx.lineTo(xAxis.right, yAxis.getPixelForValue(2));
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(xAxis.left, yAxis.getPixelForValue(-2));
+                        ctx.lineTo(xAxis.right, yAxis.getPixelForValue(-2));
+                        ctx.stroke();
+
+                        // Linhas y=±3
+                        ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+                        ctx.beginPath();
+                        ctx.moveTo(xAxis.left, yAxis.getPixelForValue(3));
+                        ctx.lineTo(xAxis.right, yAxis.getPixelForValue(3));
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(xAxis.left, yAxis.getPixelForValue(-3));
+                        ctx.lineTo(xAxis.right, yAxis.getPixelForValue(-3));
+                        ctx.stroke();
+
+                        ctx.restore();
+                    }
+                }]
+            });
         }
 
-        function addTickersToChart() {
-            const input = document.getElementById('addTickerInput');
+        function addCustomTickersToChart() {
+            const input = document.getElementById('customTickersInput');
             const tickers = input.value.split(',').map(t => t.trim().toUpperCase()).filter(t => t);
 
-            if (tickers.length === 0) return;
-
-            // Buscar dados dos tickers na assimetriaData
-            const foundTickers = [];
-            tickers.forEach(ticker => {
-                const found = assimetriaData.find(s => s.ticker === ticker);
-                if (found) {
-                    foundTickers.push(found);
-                } else {
-                    console.warn(`Ticker ${ticker} não encontrado nos dados`);
-                }
-            });
-
-            if (foundTickers.length > 0) {
-                customTickers = [...customTickers, ...foundTickers];
-                createChart(assimetriaData); // Recriar gráfico com novos dados
+            if (tickers.length === 0) {
+                alert('Digite pelo menos um ticker. Exemplo: PETR4, VALE3');
+                return;
             }
 
-            input.value = ''; // Limpar input
+            customTickers = [...new Set([...customTickers, ...tickers])]; // Remove duplicatas
+            createAssimetriaChart();
+            input.value = '';
         }
 
         function resetChart() {
             customTickers = [];
-            createChart(assimetriaData);
+            createAssimetriaChart();
+        }
+
+        function applyAssimetriaFilters() {
+            const tickerFilter = document.getElementById('filterTicker').value.toUpperCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            const nivelFilter = document.getElementById('filterNivel').value;
+
+            let filtered = assimetriaData.signals;
+
+            if (tickerFilter) {
+                filtered = filtered.filter(s => s.ticker.includes(tickerFilter));
+            }
+
+            if (statusFilter) {
+                filtered = filtered.filter(s => s.status === statusFilter);
+            }
+
+            if (nivelFilter) {
+                filtered = filtered.filter(s => s.nivel_oportunidade === nivelFilter);
+            }
+
+            renderAssimetriaTable(filtered);
+        }
+
+        function sortAssimetriaTable(column) {
+            if (!sortDirection[column]) {
+                sortDirection[column] = 'asc';
+            } else {
+                sortDirection[column] = sortDirection[column] === 'asc' ? 'desc' : 'asc';
+            }
+
+            const sorted = [...assimetriaData.signals].sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+
+                if (sortDirection[column] === 'asc') {
+                    return valA > valB ? 1 : -1;
+                } else {
+                    return valA < valB ? 1 : -1;
+                }
+            });
+
+            renderAssimetriaTable(sorted);
         }
     </script>
 </body>

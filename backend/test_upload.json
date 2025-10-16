@@ -1,0 +1,31 @@
+{
+  "trading_signals": [
+    {
+      "ticker": "PETR4",
+      "tipo": "COMPRA",
+      "score": 85,
+      "premium": true
+    }
+  ],
+  "assimetria_signals": [
+    {
+      "ticker": "VALE3",
+      "valor_atual": 65.50,
+      "media_6m": 60.20,
+      "z_score": 2.3,
+      "volatilidade_anualizada": 0.35,
+      "status": "Sobrecomprado",
+      "nivel_oportunidade": "Alta"
+    },
+    {
+      "ticker": "PETR4",
+      "valor_atual": 32.10,
+      "media_6m": 35.80,
+      "z_score": -2.5,
+      "volatilidade_anualizada": 0.42,
+      "status": "Sobrevendido",
+      "nivel_oportunidade": "Alta"
+    }
+  ],
+  "data_atualizacao": "2025-10-16T10:30:00"
+}
