@@ -6,6 +6,7 @@ import os
 
 # Importar módulos
 from modules.sinais_trading.routes import router as sinais_router
+from modules.assimetria.routes import router as assimetria_router
 
 # Criar app
 app = FastAPI(
@@ -34,6 +35,7 @@ async def health_check():
 
 # Incluir routers dos módulos
 app.include_router(sinais_router, prefix="/api/sinais", tags=["Sinais Trading"])
+app.include_router(assimetria_router, prefix="/api/assimetria", tags=["Assimetria"])
 
 # ============================
 # 2. ROTAS DE PÁGINAS HTML
