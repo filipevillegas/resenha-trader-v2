@@ -264,14 +264,179 @@
             .sidebar {
                 transform: translateX(-100%);
             }
-            
+
             .sidebar.mobile-open {
                 transform: translateX(0);
             }
-            
+
             .main-content {
                 margin-left: 0;
             }
+        }
+
+        /* Glass effect from index.html */
+        .glass {
+            background: rgba(20, 20, 20, 0.7);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Card premium effect */
+        .card-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Tag Pills from index.html */
+        .tag-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            display: inline-block;
+            border: 1px solid;
+        }
+
+        .tag-pill:hover {
+            transform: scale(1.05);
+        }
+
+        .filter-active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+            border-color: #FFD700 !important;
+            transform: scale(1.05);
+        }
+
+        /* Dropdown styles from index.html */
+        .dropdown-custom {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            background: #1a1a1a;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dropdown-toggle:hover {
+            border-color: #FFD700;
+        }
+
+        .dropdown-toggle.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s;
+            pointer-events: none;
+        }
+
+        .dropdown-icon.open {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            padding: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            z-index: 100;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .dropdown-item.select-all {
+            border-bottom: 1px solid #3f3f46;
+            margin-bottom: 4px;
+            padding-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .dropdown-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #3f3f46;
+            border-radius: 4px;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .dropdown-checkbox.checked {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-color: #FFD700;
+        }
+
+        .dropdown-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #0a0a0a;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .dropdown-count {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            color: #FFD700;
+            margin-left: auto;
         }
     </style>
 </head>
@@ -295,7 +460,7 @@
         <nav class="py-6">
             <a href="#" class="sidebar-item active" data-page="home">
                 <i class="fas fa-home"></i>
-                <span>Página Inicial</span>
+                <span>Home</span>
             </a>
             <a href="#" class="sidebar-item" data-page="sinais">
                 <i class="fas fa-signal"></i>
@@ -328,9 +493,9 @@
         <!-- Header -->
         <header class="mb-8">
             <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Página Inicial</h1>
-                    <p class="text-gray-400" id="pageSubtitle">Visão geral do mercado</p>
+                <div class="flex-1 text-center">
+                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Visão Geral do Mercado</h1>
+                    <p class="text-gray-400" id="pageSubtitle"></p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="card py-2 px-4">
@@ -346,6 +511,74 @@
         
         <!-- HOME PAGE -->
         <div class="page active" id="page-home">
+            <!-- Cards de Resumo - Sinais Trading -->
+            <div class="card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-white">
+                        <i class="fas fa-signal text-gold mr-3"></i>
+                        Sinais Trading
+                    </h2>
+                    <a href="#" onclick="navigateTo('sinais'); return false;"
+                       class="px-4 py-2 bg-gold text-dark font-medium rounded-lg hover:bg-gold-dark transition">
+                        Ver Todos <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Grid de cards de resumo -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Sinais Ativos -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold-dark/10 flex items-center justify-center">
+                                <i class="fas fa-signal text-gold text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-sinais-total">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400 mb-2">Sinais Ativos</h3>
+                        <div class="flex items-center space-x-3 text-xs">
+                            <span class="text-emerald-500" id="home-sinais-compra">▲ 0</span>
+                            <span class="text-red-500" id="home-sinais-venda">▼ 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Por Qualidade -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center">
+                                <i class="fas fa-gem text-purple-500 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-sinais-quality-count">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400 mb-2">Por Qualidade</h3>
+                        <div class="space-y-1 text-xs" id="home-sinais-quality"></div>
+                    </div>
+
+                    <!-- Por Tipo de Ativo -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
+                                <i class="fas fa-chart-pie text-blue-500 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-sinais-asset-count">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400 mb-2">Por Tipo de Ativo</h3>
+                        <div class="space-y-1 text-xs" id="home-sinais-assets"></div>
+                    </div>
+
+                    <!-- Por Setup -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-emerald-500 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-sinais-setup-count">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400 mb-2">Por Setup</h3>
+                        <div class="space-y-1 text-xs" id="home-sinais-setups"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Card de Assimetria -->
             <div class="card mb-8">
                 <div class="flex items-center justify-between mb-6">
@@ -414,36 +647,81 @@
         <!-- SINAIS PAGE -->
         <div class="page" id="page-sinais">
             <div class="card mb-6">
-                <h2 class="text-lg font-bold mb-4">Filtros</h2>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                    <input type="text" id="searchTicker" placeholder="Buscar ticker..." 
-                           class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                    
-                    <select id="filterSignal" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                        <option value="all">Todos os sinais</option>
-                        <option value="Compra">▲ Compra</option>
-                        <option value="Venda">▼ Venda</option>
-                    </select>
-                    
-                    <select id="filterQuality" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                        <option value="all">Todas qualidades</option>
-                        <option value="PREMIUM">💎 Premium</option>
-                        <option value="BOM">⭐ Bom</option>
-                        <option value="REGULAR">⚡ Regular</option>
-                        <option value="FRACO">⚠️ Fraco</option>
-                    </select>
-                    
-                    <select id="filterSetup" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
-                        <option value="all">Todos os Setups</option>
-                    </select>
-                    
-                    <button onclick="clearTradingFilters()" 
-                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition">
-                        <i class="fas fa-times mr-2"></i>Limpar
-                    </button>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <i class="fas fa-sliders-h text-gold mr-3"></i>
+                        Filtros Inteligentes
+                    </h2>
+                </div>
+
+                <div id="filtersContainer">
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+                        <div class="col-span-2">
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Buscar Ticker</label>
+                            <div class="relative">
+                                <input type="text"
+                                       id="searchTicker"
+                                       placeholder="Digite o ticker..."
+                                       class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-all font-medium">
+                                <i class="fas fa-search absolute right-4 top-4 text-gray-500"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Tipo de Sinal</label>
+                            <select id="filterSignal" class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white focus:border-gold focus:outline-none transition-all font-medium">
+                                <option value="all">Todos</option>
+                                <option value="Compra">▲ Compra</option>
+                                <option value="Venda">▼ Venda</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Tipo de Ativo</label>
+                            <div class="dropdown-custom">
+                                <button type="button" class="dropdown-toggle" id="assetTypeDropdownToggle" onclick="toggleDropdown('assetType')">
+                                    <span id="assetTypeDropdownText">Todos os tipos</span>
+                                    <i class="fas fa-chevron-down dropdown-icon" id="assetTypeDropdownIcon"></i>
+                                </button>
+                                <div class="dropdown-menu" id="assetTypeDropdownMenu"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Qualidade</label>
+                            <div class="dropdown-custom">
+                                <button type="button" class="dropdown-toggle" id="qualityDropdownToggle" onclick="toggleDropdown('quality')">
+                                    <span id="qualityDropdownText">Todas as qualidades</span>
+                                    <i class="fas fa-chevron-down dropdown-icon" id="qualityDropdownIcon"></i>
+                                </button>
+                                <div class="dropdown-menu" id="qualityDropdownMenu"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Setups</label>
+                            <div class="dropdown-custom">
+                                <button type="button" class="dropdown-toggle" id="setupDropdownToggle" onclick="toggleDropdown('setup')">
+                                    <span id="setupDropdownText">Todos os setups</span>
+                                    <i class="fas fa-chevron-down dropdown-icon" id="setupDropdownIcon"></i>
+                                </button>
+                                <div class="dropdown-menu" id="setupDropdownMenu"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-300 mb-3">Filtros Rápidos</label>
+                        <div class="flex flex-wrap gap-2" id="quickFilters"></div>
+                    </div>
+
+                    <div class="flex items-center flex-wrap gap-2 pt-4 border-t border-gray-border" id="activeFiltersDisplay">
+                        <span class="text-xs text-gray-400">Filtros ativos:</span>
+                        <span class="text-xs text-gray-500 italic">Nenhum filtro aplicado</span>
+                    </div>
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="allSignals">
                 <div class="text-center py-8 text-gray-500">
                     <div class="loading mx-auto mb-4"></div>
@@ -730,7 +1008,7 @@
 
             // Atualizar títulos
             const titles = {
-                'home': ['Página Inicial', 'Visão geral do mercado'],
+                'home': ['Visão Geral do Mercado', ''],
                 'sinais': ['Sinais Trading', 'Todos os sinais disponíveis'],
                 'assimetria': ['Assimetria', 'Análise de Z-Score e volatilidade'],
                 'ciclo': ['Ciclo Fundamentalista', 'Indicadores fundamentalistas'],
@@ -795,105 +1073,717 @@
         }
         
         function atualizarStats() {
+            // Atualizar cards de resumo da home
+            updateHomeSinaisCards();
+
+            // Inicializar dropdowns
+            initializeDropdowns();
+        }
+
+        function updateHomeSinaisCards() {
+            // Total de sinais
+            document.getElementById('home-sinais-total').textContent = allSignals.length;
+
+            // Compras e Vendas
             const compras = allSignals.filter(s => (s.signal || '').toLowerCase().includes('compra')).length;
             const vendas = allSignals.filter(s => (s.signal || '').toLowerCase().includes('venda')).length;
-            
-            // Preencher dropdown de Setups dinamicamente
-            const uniqueSetups = [...new Set(allSignals.map(s => s.setup))].sort();
-            const filterSetup = document.getElementById('filterSetup');
-            if (filterSetup) {
-                filterSetup.innerHTML = '<option value="all">Todos os Setups</option>';
-                uniqueSetups.forEach(setup => {
-                    filterSetup.innerHTML += `<option value="${setup}">${setup}</option>`;
-                });
-            }
+            document.getElementById('home-sinais-compra').textContent = `▲ ${compras}`;
+            document.getElementById('home-sinais-venda').textContent = `▼ ${vendas}`;
+
+            // Por Qualidade
+            const qualityCounts = {};
+            allSignals.forEach(s => {
+                qualityCounts[s.quality] = (qualityCounts[s.quality] || 0) + 1;
+            });
+            const qualityOrder = ['PREMIUM', 'BOM', 'REGULAR', 'FRACO'];
+            const qualityIcons = {'PREMIUM': '💎', 'BOM': '⭐', 'REGULAR': '⚡', 'FRACO': '⚠️'};
+            const qualityColors = {
+                'PREMIUM': 'text-gold',
+                'BOM': 'text-blue-500',
+                'REGULAR': 'text-yellow-500',
+                'FRACO': 'text-red-500'
+            };
+
+            let qualityHTML = '';
+            let qualityTotal = 0;
+            qualityOrder.forEach(quality => {
+                if (qualityCounts[quality]) {
+                    qualityTotal++;
+                    const icon = qualityIcons[quality] || '';
+                    const color = qualityColors[quality] || 'text-gray-400';
+                    qualityHTML += `<div class="${color}">${icon} ${quality}: ${qualityCounts[quality]}</div>`;
+                }
+            });
+            document.getElementById('home-sinais-quality').innerHTML = qualityHTML || '<div class="text-gray-500">Nenhum</div>';
+            document.getElementById('home-sinais-quality-count').textContent = qualityTotal;
+
+            // Por Tipo de Ativo
+            const assetCounts = {};
+            allSignals.forEach(s => {
+                const tags = s.tags || '';
+                if (tags.includes('Ação')) assetCounts['Ação'] = (assetCounts['Ação'] || 0) + 1;
+                if (tags.includes('BDR')) assetCounts['BDR'] = (assetCounts['BDR'] || 0) + 1;
+                if (tags.includes('ETF')) assetCounts['ETF'] = (assetCounts['ETF'] || 0) + 1;
+            });
+
+            const assetColors = {
+                'Ação': 'text-blue-400',
+                'BDR': 'text-indigo-400',
+                'ETF': 'text-sky-400'
+            };
+
+            let assetHTML = '';
+            let assetTotal = 0;
+            Object.entries(assetCounts).forEach(([asset, count]) => {
+                assetTotal++;
+                const color = assetColors[asset] || 'text-gray-400';
+                assetHTML += `<div class="${color}">${asset}: ${count}</div>`;
+            });
+            document.getElementById('home-sinais-assets').innerHTML = assetHTML || '<div class="text-gray-500">Nenhum</div>';
+            document.getElementById('home-sinais-asset-count').textContent = assetTotal;
+
+            // Por Setup (top 3)
+            const setupCounts = {};
+            allSignals.forEach(s => {
+                setupCounts[s.setup] = (setupCounts[s.setup] || 0) + 1;
+            });
+
+            const topSetups = Object.entries(setupCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3);
+
+            let setupHTML = '';
+            topSetups.forEach(([setup, count]) => {
+                setupHTML += `<div class="text-gray-300">${setup}: ${count}</div>`;
+            });
+            document.getElementById('home-sinais-setups').innerHTML = setupHTML || '<div class="text-gray-500">Nenhum</div>';
+            document.getElementById('home-sinais-setup-count').textContent = Object.keys(setupCounts).length;
         }
         
         function renderizarTodosSinais() {
             const container = document.getElementById('allSignals');
             const searchTerm = (document.getElementById('searchTicker')?.value || '').toLowerCase();
             const filterSignal = document.getElementById('filterSignal')?.value || 'all';
-            const filterQuality = document.getElementById('filterQuality')?.value || 'all';
-            const filterSetup = document.getElementById('filterSetup')?.value || 'all';
-            
+
             let filtered = allSignals.filter(s => {
                 // Excluir tickers específicos
                 const excludedTickers = ['CDI', 'US10TY', 'USD', 'CMDTY'];
                 if (excludedTickers.includes(s.ticker)) return false;
-                
+
+                // Filtro de busca
                 const matchSearch = !searchTerm || (s.ticker || '').toLowerCase().includes(searchTerm);
+
+                // Filtro de sinal (Compra/Venda)
                 const matchSignal = filterSignal === 'all' || s.signal === filterSignal;
-                const matchQuality = filterQuality === 'all' || s.quality === filterQuality;
-                const matchSetup = filterSetup === 'all' || s.setup === filterSetup;
-                
-                return matchSearch && matchSignal && matchQuality && matchSetup;
+
+                // Filtro de qualidade (dropdown)
+                const matchQuality = selectedQualities.length === 0 || selectedQualities.includes(s.quality);
+
+                // Filtro de setup (dropdown)
+                const matchSetup = selectedSetups.length === 0 || selectedSetups.includes(s.setup);
+
+                // Filtro de tipo de ativo (dropdown)
+                let matchAssetType = true;
+                if (selectedAssetTypes.length > 0) {
+                    const tags = s.tags || '';
+                    matchAssetType = selectedAssetTypes.some(type => tags.includes(type));
+                }
+
+                // Filtros rápidos (tags)
+                let matchQuickFilters = true;
+                if (activeQuickFilters.length > 0) {
+                    const tags = (s.tags || '').split(' ');
+                    matchQuickFilters = activeQuickFilters.every(filter => tags.includes(filter));
+                }
+
+                return matchSearch && matchSignal && matchQuality && matchSetup && matchAssetType && matchQuickFilters;
             });
-            
+
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Nenhum sinal encontrado</div>';
                 return;
             }
-            
+
             container.innerHTML = filtered.map(sinal => criarCardSinal(sinal)).join('');
         }
         
         function criarCardSinal(sinal) {
             const isCompra = (sinal.signal || '').toLowerCase().includes('compra');
-            const badgeClass = isCompra ? 'badge-buy' : 'badge-sell';
-            const icon = isCompra ? '▲' : '▼';
-            
-            // Filtrar tags excluídas
-            const excludedTags = ['CDI', 'US10TY', 'USD', 'CMDTY'];
-            const tags = (sinal.tags || []).filter(tag => !excludedTags.includes(tag));
-            const tagsHTML = tags.map(tag => `<span class="badge text-xs bg-gray-700 text-gray-300 mr-1 mb-1">${tag}</span>`).join('');
-            
+            const signalColor = isCompra ? 'emerald-500' : 'red';
+            const signalIcon = isCompra ? 'arrow-up' : 'arrow-down';
+
+            // Formatar valores monetários
+            const formatCurrency = (value) => {
+                if (!value || value === 'N/A') return 'N/A';
+                const num = parseFloat(value);
+                if (isNaN(num)) return value;
+                return `R$ ${num.toFixed(2)}`;
+            };
+
+            // Calcular variação percentual
+            const calcPercentChange = (current, target) => {
+                if (!current || !target || current === 'N/A' || target === 'N/A') return '';
+                const currentNum = parseFloat(current);
+                const targetNum = parseFloat(target);
+                if (isNaN(currentNum) || isNaN(targetNum)) return '';
+                const percent = ((targetNum - currentNum) / currentNum) * 100;
+                return ` (${percent >= 0 ? '+' : ''}${percent.toFixed(1)}%)`;
+            };
+
+            const ultimo = parseFloat(sinal.ultimo);
+
+            // Filtrar e processar tags (excluir CDI0, US10YT0, USD0, CMDTY0, nan)
+            const excludedPatterns = ['CDI0', 'US10YT0', 'USD0', 'CMDTY0', 'nan'];
+            const allTags = (sinal.tags || '').split(' ').filter(tag =>
+                tag && !excludedPatterns.some(pattern => tag.includes(pattern))
+            );
+
+            const tagsHTML = allTags.map(tag => {
+                const tagClass = getTagClass(tag);
+                return `<span class="tag-pill ${tagClass}">${tag}</span>`;
+            }).join('');
+
+            // Tipo de ativo
+            let assetType = '';
+            if (sinal.tags?.includes('Ação')) assetType = 'Ação';
+            else if (sinal.tags?.includes('BDR')) assetType = 'BDR';
+            else if (sinal.tags?.includes('ETF')) assetType = 'ETF';
+
+            const assetTypeColors = {
+                'Ação': 'bg-blue-600/20 text-blue-400 border-blue-600/30',
+                'BDR': 'bg-indigo-600/20 text-indigo-400 border-indigo-600/30',
+                'ETF': 'bg-sky-600/20 text-sky-400 border-sky-600/30'
+            };
+            const assetTypeClass = assetTypeColors[assetType] || '';
+
+            // Score color
+            const getScoreColorClass = (score) => {
+                if (score >= 80) return 'bg-emerald-500/20 text-emerald-500';
+                if (score >= 65) return 'bg-blue-500/20 text-blue-500';
+                if (score >= 45) return 'bg-yellow-500/20 text-yellow-500';
+                return 'bg-red/20 text-red';
+            };
+
             return `
-                <div class="signal-card">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold">${sinal.ticker || 'N/A'}</h3>
-                        <span class="badge ${badgeClass}">${icon} ${sinal.signal || 'N/A'}</span>
-                    </div>
-                    <div class="text-sm text-gray-400 mb-3">${sinal.setup || 'N/A'}</div>
-                    <div class="text-2xl font-bold mb-3">R$ ${typeof sinal.ultimo === 'number' ? sinal.ultimo.toFixed(2) : sinal.ultimo}</div>
-                    
-                    <!-- Gain e Loss -->
-                    <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
-                        <div class="bg-green-900/20 p-2 rounded">
-                            <div class="text-gray-400">Gain 1</div>
-                            <div class="text-green-500 font-bold">${sinal.gain1 || 'N/A'}</div>
+                <div class="glass rounded-2xl p-5 card-premium">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold font-display text-white mb-1">${sinal.ticker || 'N/A'}</h3>
+                            <p class="text-xs text-gray-400">${sinal.setup || 'N/A'}</p>
                         </div>
-                        <div class="bg-green-900/20 p-2 rounded">
-                            <div class="text-gray-400">Gain 2</div>
-                            <div class="text-green-500 font-bold">${sinal.gain2 || 'N/A'}</div>
-                        </div>
-                        <div class="bg-red-900/20 p-2 rounded">
-                            <div class="text-gray-400">Loss 1</div>
-                            <div class="text-red-500 font-bold">${sinal.loss1 || 'N/A'}</div>
-                        </div>
-                        <div class="bg-red-900/20 p-2 rounded">
-                            <div class="text-gray-400">Loss 2</div>
-                            <div class="text-red-500 font-bold">${sinal.loss2 || 'N/A'}</div>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="text-xs px-2 py-1 rounded-full bg-${signalColor}/20 text-${signalColor} font-semibold">
+                                <i class="fas fa-${signalIcon} mr-1"></i>${sinal.signal || 'N/A'}
+                            </span>
+                            ${assetType ? `<span class="tag-pill ${assetTypeClass}">${assetType}</span>` : ''}
                         </div>
                     </div>
-                    
-                    <div class="flex justify-between items-center text-sm mb-2">
-                        <span class="text-gray-400">Score: <span class="font-bold text-white">${sinal.score || 0}</span></span>
-                        <span class="badge ${sinal.score >= 80 ? 'badge-premium' : ''} text-xs">${sinal.quality || 'N/A'}</span>
+
+                    <div class="mb-4">
+                        <div class="text-xs text-gray-500 mb-1">Último Preço</div>
+                        <div class="text-2xl font-bold font-display text-white">${formatCurrency(sinal.ultimo)}</div>
+                        <div class="text-xs mt-1">
+                            <span class="px-2 py-1 rounded ${getScoreColorClass(sinal.score)} font-semibold">
+                                Score: ${sinal.score || 0}
+                            </span>
+                        </div>
                     </div>
-                    
-                    <!-- Tags -->
-                    <div class="flex flex-wrap gap-1 mt-2">
-                        ${tagsHTML}
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                            <div class="text-xs text-emerald-500 mb-2 font-semibold">
+                                <i class="fas fa-bullseye mr-1"></i> Alvos
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-xs text-gray-300">${formatCurrency(sinal.gain1)}${calcPercentChange(sinal.ultimo, sinal.gain1)}</div>
+                                ${sinal.gain2 !== 'N/A' ? `<div class="text-xs text-gray-300">${formatCurrency(sinal.gain2)}${calcPercentChange(sinal.ultimo, sinal.gain2)}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="bg-red/10 rounded-lg p-3 border border-red/20">
+                            <div class="text-xs text-red mb-2 font-semibold">
+                                <i class="fas fa-shield-alt mr-1"></i> Proteção
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-xs text-gray-300">${formatCurrency(sinal.loss1)}${calcPercentChange(sinal.ultimo, sinal.loss1)}</div>
+                                ${sinal.loss2 !== 'N/A' ? `<div class="text-xs text-gray-300">${formatCurrency(sinal.loss2)}${calcPercentChange(sinal.ultimo, sinal.loss2)}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-800 pt-3">
+                        <div class="flex flex-wrap gap-2">
+                            ${tagsHTML}
+                        </div>
                     </div>
                 </div>
             `;
         }
         
+        // ============================
+        // FILTROS INTELIGENTES - VARIÁVEIS GLOBAIS
+        // ============================
+        let selectedAssetTypes = [];
+        let selectedQualities = [];
+        let selectedSetups = [];
+        let activeQuickFilters = [];
+
+        // ============================
+        // FUNÇÕES DE TAG E FILTROS
+        // ============================
+        function getTagClass(tag) {
+            const classes = {
+                'ALTA': 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30',
+                'BAIXA': 'bg-red/20 text-red border-red/30',
+                'LATERAL': 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30',
+                'VOL+': 'bg-orange-500/20 text-orange-500 border-orange-500/30',
+                'VOL-': 'bg-orange-500/10 text-orange-500/70 border-orange-500/20',
+                'RSI+': 'bg-teal-500/20 text-teal-400 border-teal-500/30',
+                'RSI-': 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+            };
+
+            if (tag.startsWith('RSI') && !tag.includes('+') && !tag.includes('-')) {
+                const value = parseInt(tag.replace('RSI', ''));
+                if (value > 70) return 'bg-red/20 text-red border-red/30';
+                if (value < 30) return 'bg-emerald-500/20 text-emerald-500 border-emerald-500/30';
+                return 'bg-yellow-500/20 text-yellow-500 border-yellow-500/30';
+            }
+
+            return classes[tag] || 'bg-gray-600/20 text-gray-400 border-gray-600/30';
+        }
+
+        // Inicializar dropdowns
+        function initializeDropdowns() {
+            initializeAssetTypeDropdown();
+            initializeQualityDropdown();
+            initializeSetupDropdown();
+            renderQuickFilters();
+        }
+
+        function initializeAssetTypeDropdown() {
+            const assetCounts = {};
+            allSignals.forEach(s => {
+                const tags = s.tags || '';
+                if (tags.includes('Ação')) assetCounts['Ação'] = (assetCounts['Ação'] || 0) + 1;
+                if (tags.includes('BDR')) assetCounts['BDR'] = (assetCounts['BDR'] || 0) + 1;
+                if (tags.includes('ETF')) assetCounts['ETF'] = (assetCounts['ETF'] || 0) + 1;
+            });
+
+            const dropdownMenu = document.getElementById('assetTypeDropdownMenu');
+            if (!dropdownMenu) return;
+
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllAssetTypes(event)">
+                    <div class="dropdown-checkbox" id="selectAllAssetTypeCheckbox"></div>
+                    <span>Todos os tipos</span>
+                    <span class="dropdown-count">${Object.keys(assetCounts).length}</span>
+                </div>
+            `;
+
+            Object.entries(assetCounts).forEach(([assetType, count]) => {
+                html += `
+                    <div class="dropdown-item" onclick="toggleAssetType(event, '${assetType}')">
+                        <div class="dropdown-checkbox" id="assetType_${assetType}"></div>
+                        <span>${assetType}</span>
+                        <span class="dropdown-count">${count}</span>
+                    </div>
+                `;
+            });
+
+            dropdownMenu.innerHTML = html;
+        }
+
+        function initializeQualityDropdown() {
+            const qualityCounts = {};
+            allSignals.forEach(s => {
+                qualityCounts[s.quality] = (qualityCounts[s.quality] || 0) + 1;
+            });
+
+            const dropdownMenu = document.getElementById('qualityDropdownMenu');
+            if (!dropdownMenu) return;
+
+            const qualityOrder = ['PREMIUM', 'BOM', 'REGULAR', 'FRACO'];
+            const qualityIcons = {'PREMIUM': '💎', 'BOM': '⭐', 'REGULAR': '⚡', 'FRACO': '⚠️'};
+
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllQualities(event)">
+                    <div class="dropdown-checkbox" id="selectAllQualityCheckbox"></div>
+                    <span>Todas as qualidades</span>
+                    <span class="dropdown-count">${Object.keys(qualityCounts).length}</span>
+                </div>
+            `;
+
+            qualityOrder.forEach(quality => {
+                if (qualityCounts[quality]) {
+                    const icon = qualityIcons[quality];
+                    html += `
+                        <div class="dropdown-item" onclick="toggleQuality(event, '${quality}')">
+                            <div class="dropdown-checkbox" id="quality_${quality}"></div>
+                            <span>${icon} ${quality}</span>
+                            <span class="dropdown-count">${qualityCounts[quality]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            dropdownMenu.innerHTML = html;
+        }
+
+        function initializeSetupDropdown() {
+            const setupCounts = {};
+            allSignals.forEach(s => {
+                setupCounts[s.setup] = (setupCounts[s.setup] || 0) + 1;
+            });
+
+            const dropdownMenu = document.getElementById('setupDropdownMenu');
+            if (!dropdownMenu) return;
+
+            let html = `
+                <div class="dropdown-item select-all" onclick="toggleAllSetups(event)">
+                    <div class="dropdown-checkbox" id="selectAllSetupCheckbox"></div>
+                    <span>Todos os setups</span>
+                    <span class="dropdown-count">${Object.keys(setupCounts).length}</span>
+                </div>
+            `;
+
+            Object.entries(setupCounts).forEach(([setup, count]) => {
+                const setupId = setup.replace(/\s+/g, '_').replace(/\./g, '_');
+                html += `
+                    <div class="dropdown-item" onclick="toggleSetup(event, '${setup}')">
+                        <div class="dropdown-checkbox" id="setup_${setupId}"></div>
+                        <span>${setup}</span>
+                        <span class="dropdown-count">${count}</span>
+                    </div>
+                `;
+            });
+
+            dropdownMenu.innerHTML = html;
+        }
+
+        function renderQuickFilters() {
+            const quickFiltersContainer = document.getElementById('quickFilters');
+            if (!quickFiltersContainer) return;
+
+            // Tags excluídas: Ação, BDR, ETF, DOM, EXP
+            const excludedTags = ['Ação', 'BDR', 'ETF', 'DOM', 'EXP'];
+
+            const allTags = {};
+            allSignals.forEach(signal => {
+                const tags = (signal.tags || '').split(' ').filter(t => t && !excludedTags.includes(t));
+                tags.forEach(tag => {
+                    if (!tag.startsWith('CDI') && !tag.startsWith('US10YT') && !tag.startsWith('USD') && !tag.startsWith('CMDTY') && tag !== 'nan') {
+                        allTags[tag] = (allTags[tag] || 0) + 1;
+                    }
+                });
+            });
+
+            const tagsToShow = ['ALTA', 'BAIXA', 'LATERAL', 'VOL+', 'VOL-', 'RSI+', 'RSI-'];
+            let html = '';
+
+            tagsToShow.forEach(tag => {
+                if (allTags[tag]) {
+                    const tagClass = getTagClass(tag);
+                    const isActive = activeQuickFilters.includes(tag) ? 'filter-active' : '';
+                    html += `
+                        <button class="tag-pill ${tagClass} ${isActive} cursor-pointer" onclick="toggleQuickFilter('${tag}')">
+                            ${tag}
+                        </button>
+                    `;
+                }
+            });
+
+            quickFiltersContainer.innerHTML = html || '<span class="text-xs text-gray-500">Nenhum filtro disponível</span>';
+        }
+
+        function toggleQuickFilter(tag) {
+            const index = activeQuickFilters.indexOf(tag);
+            if (index > -1) {
+                activeQuickFilters.splice(index, 1);
+            } else {
+                activeQuickFilters.push(tag);
+            }
+            renderQuickFilters();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleDropdown(type) {
+            const menu = document.getElementById(`${type}DropdownMenu`);
+            const icon = document.getElementById(`${type}DropdownIcon`);
+            const toggle = document.getElementById(`${type}DropdownToggle`);
+
+            // Fechar outros dropdowns
+            document.querySelectorAll('.dropdown-menu').forEach(m => {
+                if (m !== menu) m.classList.remove('show');
+            });
+            document.querySelectorAll('.dropdown-icon').forEach(i => {
+                if (i !== icon) i.classList.remove('open');
+            });
+            document.querySelectorAll('.dropdown-toggle').forEach(t => {
+                if (t !== toggle) t.classList.remove('active');
+            });
+
+            // Toggle atual
+            menu.classList.toggle('show');
+            icon.classList.toggle('open');
+            toggle.classList.toggle('active');
+        }
+
+        function toggleAssetType(event, assetType) {
+            event.stopPropagation();
+            const checkbox = document.getElementById(`assetType_${assetType}`);
+            const index = selectedAssetTypes.indexOf(assetType);
+
+            if (index > -1) {
+                selectedAssetTypes.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedAssetTypes.push(assetType);
+                checkbox.classList.add('checked');
+            }
+
+            updateAssetTypeDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleAllAssetTypes(event) {
+            event.stopPropagation();
+            const assetCounts = {};
+            allSignals.forEach(s => {
+                const tags = s.tags || '';
+                if (tags.includes('Ação')) assetCounts['Ação'] = true;
+                if (tags.includes('BDR')) assetCounts['BDR'] = true;
+                if (tags.includes('ETF')) assetCounts['ETF'] = true;
+            });
+
+            const allAssetTypes = Object.keys(assetCounts);
+            const checkbox = document.getElementById('selectAllAssetTypeCheckbox');
+
+            if (selectedAssetTypes.length === allAssetTypes.length) {
+                selectedAssetTypes = [];
+                document.querySelectorAll('#assetTypeDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedAssetTypes = [...allAssetTypes];
+                document.querySelectorAll('#assetTypeDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+
+            updateAssetTypeDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleQuality(event, quality) {
+            event.stopPropagation();
+            const checkbox = document.getElementById(`quality_${quality}`);
+            const index = selectedQualities.indexOf(quality);
+
+            if (index > -1) {
+                selectedQualities.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedQualities.push(quality);
+                checkbox.classList.add('checked');
+            }
+
+            updateQualityDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleAllQualities(event) {
+            event.stopPropagation();
+            const qualityCounts = {};
+            allSignals.forEach(s => {
+                qualityCounts[s.quality] = true;
+            });
+
+            const allQualities = Object.keys(qualityCounts);
+
+            if (selectedQualities.length === allQualities.length) {
+                selectedQualities = [];
+                document.querySelectorAll('#qualityDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedQualities = [...allQualities];
+                document.querySelectorAll('#qualityDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+
+            updateQualityDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleSetup(event, setup) {
+            event.stopPropagation();
+            const setupId = setup.replace(/\s+/g, '_').replace(/\./g, '_');
+            const checkbox = document.getElementById(`setup_${setupId}`);
+            const index = selectedSetups.indexOf(setup);
+
+            if (index > -1) {
+                selectedSetups.splice(index, 1);
+                checkbox.classList.remove('checked');
+            } else {
+                selectedSetups.push(setup);
+                checkbox.classList.add('checked');
+            }
+
+            updateSetupDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function toggleAllSetups(event) {
+            event.stopPropagation();
+            const setupCounts = {};
+            allSignals.forEach(s => {
+                setupCounts[s.setup] = true;
+            });
+
+            const allSetups = Object.keys(setupCounts);
+
+            if (selectedSetups.length === allSetups.length) {
+                selectedSetups = [];
+                document.querySelectorAll('#setupDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.remove('checked');
+                });
+            } else {
+                selectedSetups = [...allSetups];
+                document.querySelectorAll('#setupDropdownMenu .dropdown-checkbox').forEach(cb => {
+                    cb.classList.add('checked');
+                });
+            }
+
+            updateSetupDropdownText();
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
+        function updateAssetTypeDropdownText() {
+            const text = document.getElementById('assetTypeDropdownText');
+            if (!text) return;
+            if (selectedAssetTypes.length === 0) {
+                text.textContent = 'Todos os tipos';
+            } else if (selectedAssetTypes.length === 1) {
+                text.textContent = selectedAssetTypes[0];
+            } else {
+                text.textContent = `${selectedAssetTypes.length} selecionados`;
+            }
+        }
+
+        function updateQualityDropdownText() {
+            const text = document.getElementById('qualityDropdownText');
+            if (!text) return;
+            if (selectedQualities.length === 0) {
+                text.textContent = 'Todas as qualidades';
+            } else if (selectedQualities.length === 1) {
+                text.textContent = selectedQualities[0];
+            } else {
+                text.textContent = `${selectedQualities.length} selecionadas`;
+            }
+        }
+
+        function updateSetupDropdownText() {
+            const text = document.getElementById('setupDropdownText');
+            if (!text) return;
+            if (selectedSetups.length === 0) {
+                text.textContent = 'Todos os setups';
+            } else if (selectedSetups.length === 1) {
+                text.textContent = selectedSetups[0];
+            } else {
+                text.textContent = `${selectedSetups.length} selecionados`;
+            }
+        }
+
+        function updateActiveFiltersDisplay() {
+            const display = document.getElementById('activeFiltersDisplay');
+            if (!display) return;
+
+            const allFilters = [...selectedAssetTypes, ...selectedQualities, ...selectedSetups, ...activeQuickFilters];
+            const searchTerm = document.getElementById('searchTicker')?.value || '';
+            const signalFilter = document.getElementById('filterSignal')?.value || 'all';
+
+            if (searchTerm) allFilters.push(`Busca: ${searchTerm}`);
+            if (signalFilter !== 'all') allFilters.push(signalFilter);
+
+            if (allFilters.length === 0) {
+                display.innerHTML = `
+                    <span class="text-xs text-gray-400">Filtros ativos:</span>
+                    <span class="text-xs text-gray-500 italic">Nenhum filtro aplicado</span>
+                `;
+            } else {
+                let html = '<span class="text-xs text-gray-400">Filtros ativos:</span>';
+                allFilters.forEach(filter => {
+                    const tagClass = getTagClass(filter);
+                    html += `
+                        <span class="tag-pill ${tagClass} cursor-pointer" onclick="removeFilter('${filter}')">
+                            ${filter} <i class="fas fa-times ml-1 text-xs"></i>
+                        </span>
+                    `;
+                });
+                display.innerHTML = html;
+            }
+        }
+
+        function removeFilter(filter) {
+            // Remover de arrays
+            let index = selectedAssetTypes.indexOf(filter);
+            if (index > -1) {
+                selectedAssetTypes.splice(index, 1);
+                const checkbox = document.getElementById(`assetType_${filter}`);
+                if (checkbox) checkbox.classList.remove('checked');
+                updateAssetTypeDropdownText();
+            }
+
+            index = selectedQualities.indexOf(filter);
+            if (index > -1) {
+                selectedQualities.splice(index, 1);
+                const checkbox = document.getElementById(`quality_${filter}`);
+                if (checkbox) checkbox.classList.remove('checked');
+                updateQualityDropdownText();
+            }
+
+            index = selectedSetups.indexOf(filter);
+            if (index > -1) {
+                const setupId = filter.replace(/\s+/g, '_').replace(/\./g, '_');
+                selectedSetups.splice(index, 1);
+                const checkbox = document.getElementById(`setup_${setupId}`);
+                if (checkbox) checkbox.classList.remove('checked');
+                updateSetupDropdownText();
+            }
+
+            index = activeQuickFilters.indexOf(filter);
+            if (index > -1) {
+                activeQuickFilters.splice(index, 1);
+                renderQuickFilters();
+            }
+
+            updateActiveFiltersDisplay();
+            renderizarTodosSinais();
+        }
+
         function clearTradingFilters() {
             document.getElementById('searchTicker').value = '';
             document.getElementById('filterSignal').value = 'all';
-            document.getElementById('filterQuality').value = 'all';
-            document.getElementById('filterSetup').value = 'all';
+            selectedAssetTypes = [];
+            selectedQualities = [];
+            selectedSetups = [];
+            activeQuickFilters = [];
+
+            // Desmarcar checkboxes
+            document.querySelectorAll('.dropdown-checkbox').forEach(cb => cb.classList.remove('checked'));
+
+            updateAssetTypeDropdownText();
+            updateQualityDropdownText();
+            updateSetupDropdownText();
+            renderQuickFilters();
+            updateActiveFiltersDisplay();
             renderizarTodosSinais();
         }
         
@@ -1317,11 +2207,26 @@
             loadHomeAssimetriaCard();
 
             // Event listeners para filtros de Trading
-            ['searchTicker', 'filterSignal', 'filterQuality', 'filterSetup'].forEach(id => {
+            ['searchTicker', 'filterSignal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    el.addEventListener('input', renderizarTodosSinais);
-                    el.addEventListener('change', renderizarTodosSinais);
+                    el.addEventListener('input', () => {
+                        updateActiveFiltersDisplay();
+                        renderizarTodosSinais();
+                    });
+                    el.addEventListener('change', () => {
+                        updateActiveFiltersDisplay();
+                        renderizarTodosSinais();
+                    });
+                }
+            });
+
+            // Fechar dropdowns ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.dropdown-custom')) {
+                    document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                    document.querySelectorAll('.dropdown-icon').forEach(i => i.classList.remove('open'));
+                    document.querySelectorAll('.dropdown-toggle').forEach(t => t.classList.remove('active'));
                 }
             });
         });
