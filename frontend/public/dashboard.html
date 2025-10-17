@@ -498,7 +498,7 @@
         <header class="mb-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Visão Geral</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle"></h1>
                     <p class="text-gray-400" id="pageSubtitle"></p>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -910,7 +910,6 @@
             <div id="assimetriaEmpty" class="hidden card text-center py-16">
                 <i class="fas fa-chart-area text-6xl text-gray-600 mb-6"></i>
                 <h3 class="text-xl font-bold mb-2">Nenhum sinal de assimetria disponível</h3>
-                <p class="text-gray-400">Aguarde a próxima atualização do GitHub Actions</p>
             </div>
         </div>
         
@@ -927,15 +926,10 @@
         <!-- EDUCACIONAL PAGE -->
         <div class="page" id="page-blog">
             <div class="card mb-6">
-                <h2 class="text-2xl font-bold mb-6">
-                    <i class="fas fa-graduation-cap text-gold mr-3"></i>
-                    Educacional
-                </h2>
-                
                 <div class="space-y-6">
                     <!-- Item 1 -->
                     <div class="border-b border-gray-800 pb-6">
-                        <h3 class="text-lg font-semibold mb-3">📊 Sistema de Sinais</h3>
+                        <h3 class="text-lg font-semibold mb-3">Sistema de Sinais</h3>
                         <p class="text-gray-400 mb-3">
                             Nossa plataforma utiliza 5 setups de análise técnica profissionais para identificar oportunidades de trading no mercado brasileiro.
                         </p>
@@ -950,7 +944,7 @@
                     
                     <!-- Item 2 -->
                     <div class="border-b border-gray-800 pb-6">
-                        <h3 class="text-lg font-semibold mb-3">⭐ Sistema de Qualidade</h3>
+                        <h3 class="text-lg font-semibold mb-3">Sistema de Qualidade</h3>
                         <p class="text-gray-400 mb-3">
                             Cada sinal recebe um score de 0-100 baseado em múltiplos fatores técnicos:
                         </p>
@@ -976,7 +970,7 @@
                     
                     <!-- Item 3 -->
                     <div class="pb-6">
-                        <h3 class="text-lg font-semibold mb-3">⚠️ Disclaimer</h3>
+                        <h3 class="text-lg font-semibold mb-3">Disclaimer</h3>
                         <p class="text-gray-400 text-sm leading-relaxed">
                             As informações e os sinais disponibilizados nesta plataforma são gerados por um sistema automatizado 
                             com base em análise técnica e inteligência artificial, tendo caráter estritamente educacional. 
@@ -1019,18 +1013,23 @@
             });
             document.getElementById(`page-${page}`).classList.add('active');
 
-            // Atualizar títulos
+            // Atualizar títulos com ícones
             const titles = {
-                'home': ['Visão Geral', ''],
-                'sinais': ['Sinais Trading', ''],
-                'assimetria': ['Assimetria', ''],
-                'ciclo': ['Ciclo Fundamentalista', ''],
-                'blog': ['Educacional', '']
+                'home': { title: '', subtitle: '', icon: '' },
+                'sinais': { title: 'Sinais Trading', subtitle: '', icon: 'fa-signal' },
+                'assimetria': { title: 'Assimetria', subtitle: '', icon: 'fa-chart-area' },
+                'ciclo': { title: 'Ciclo Fundamentalista', subtitle: '', icon: 'fa-sync-alt' },
+                'blog': { title: 'Educacional', subtitle: '', icon: 'fa-graduation-cap' }
             };
 
             if (titles[page]) {
-                document.getElementById('pageTitle').textContent = titles[page][0];
-                document.getElementById('pageSubtitle').textContent = titles[page][1];
+                const titleEl = document.getElementById('pageTitle');
+                if (titles[page].icon) {
+                    titleEl.innerHTML = `<i class="fas ${titles[page].icon} text-gold mr-3"></i>${titles[page].title}`;
+                } else {
+                    titleEl.textContent = titles[page].title;
+                }
+                document.getElementById('pageSubtitle').textContent = titles[page].subtitle;
             }
 
             // Carregar dados de assimetria quando navegar para página
