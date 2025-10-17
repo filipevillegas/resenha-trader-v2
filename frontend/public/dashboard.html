@@ -295,7 +295,7 @@
         <nav class="py-6">
             <a href="#" class="sidebar-item active" data-page="home">
                 <i class="fas fa-home"></i>
-                <span>Dashboard</span>
+                <span>Página Inicial</span>
             </a>
             <a href="#" class="sidebar-item" data-page="sinais">
                 <i class="fas fa-signal"></i>
@@ -311,7 +311,7 @@
             </a>
             <a href="#" class="sidebar-item" data-page="blog">
                 <i class="fas fa-book"></i>
-                <span>Documentação</span>
+                <span>Manual</span>
             </a>
         </nav>
         
@@ -329,7 +329,7 @@
         <header class="mb-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Dashboard</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Página Inicial</h1>
                     <p class="text-gray-400" id="pageSubtitle">Visão geral do mercado</p>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -346,75 +346,66 @@
         
         <!-- HOME PAGE -->
         <div class="page active" id="page-home">
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Total Sinais -->
-                <div class="card stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold/20 to-gold-dark/10 flex items-center justify-center">
-                            <i class="fas fa-signal text-gold text-xl"></i>
-                        </div>
-                        <span class="text-3xl font-bold" id="totalSignals">--</span>
-                    </div>
-                    <h3 class="text-sm text-gray-400 mb-2">Sinais Ativos</h3>
-                    <div class="flex items-center space-x-4 text-sm">
-                        <span class="text-green-500">▲ <span id="buyCount">--</span></span>
-                        <span class="text-red-500">▼ <span id="sellCount">--</span></span>
-                    </div>
-                </div>
-                
-                <!-- Premium -->
-                <div class="card stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center">
-                            <i class="fas fa-gem text-purple-500 text-xl"></i>
-                        </div>
-                        <span class="text-3xl font-bold" id="premiumCount">--</span>
-                    </div>
-                    <h3 class="text-sm text-gray-400 mb-2">Sinais Premium</h3>
-                    <div class="text-xs text-gray-500">Score ≥ 80</div>
-                </div>
-                
-                <!-- Qualidade Média -->
-                <div class="card stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
-                            <i class="fas fa-star text-blue-500 text-xl"></i>
-                        </div>
-                        <span class="text-3xl font-bold" id="avgScore">--</span>
-                    </div>
-                    <h3 class="text-sm text-gray-400 mb-2">Score Médio</h3>
-                    <div class="text-xs text-gray-500">Qualidade geral</div>
-                </div>
-                
-                <!-- Setups Ativos -->
-                <div class="card stat-card">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/10 flex items-center justify-center">
-                            <i class="fas fa-layer-group text-green-500 text-xl"></i>
-                        </div>
-                        <span class="text-3xl font-bold" id="setupCount">--</span>
-                    </div>
-                    <h3 class="text-sm text-gray-400 mb-2">Setups Diferentes</h3>
-                    <div class="text-xs text-gray-500">Estratégias ativas</div>
-                </div>
-            </div>
-            
-            <!-- Recent Signals -->
+            <!-- Card de Assimetria -->
             <div class="card mb-8">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-white">
-                        <i class="fas fa-bolt text-gold mr-2"></i>
-                        Sinais Recentes
+                    <h2 class="text-2xl font-bold text-white">
+                        <i class="fas fa-chart-area text-blue-500 mr-3"></i>
+                        Análise de Assimetria (Z-Score)
                     </h2>
-                    <a href="#" onclick="navigateTo('sinais')" class="text-sm text-gold hover:text-gold-dark transition">
-                        Ver todos <i class="fas fa-arrow-right ml-1"></i>
+                    <a href="#" onclick="navigateTo('assimetria'); return false;" 
+                       class="px-4 py-2 bg-gold text-dark font-medium rounded-lg hover:bg-gold-dark transition">
+                        Ver todos <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="recentSignals">
-                    <div class="text-center py-8 text-gray-500">
-                        <div class="loading mx-auto mb-4"></div>
-                        <p>Carregando sinais...</p>
+                
+                <!-- Grid de cards de resumo -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <!-- Total -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
+                                <i class="fas fa-chart-area text-blue-500 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-assimetria-total">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400">Total de Sinais</h3>
+                    </div>
+
+                    <!-- Sobrecompra -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-600/10 flex items-center justify-center">
+                                <i class="fas fa-arrow-down text-blue-600 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-assimetria-sobrecomprados">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400">Sobrecompra ↓</h3>
+                        <div class="text-xs text-gray-500">Acima da média</div>
+                    </div>
+
+                    <!-- Sobrevenda -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/10 flex items-center justify-center">
+                                <i class="fas fa-arrow-up text-red-500 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-assimetria-sobrevendidos">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400">Sobrevenda ↑</h3>
+                        <div class="text-xs text-gray-500">Abaixo da média</div>
+                    </div>
+
+                    <!-- Críticas -->
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-600/20 to-orange-600/10 flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
+                            </div>
+                            <span class="text-3xl font-bold" id="home-assimetria-criticas">-</span>
+                        </div>
+                        <h3 class="text-sm text-gray-400">Sinais Críticos (±3σ)</h3>
+                        <div class="text-xs text-gray-500">Desvios extremos</div>
                     </div>
                 </div>
             </div>
@@ -424,13 +415,16 @@
         <div class="page" id="page-sinais">
             <div class="card mb-6">
                 <h2 class="text-lg font-bold mb-4">Filtros</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <input type="text" id="searchTicker" placeholder="Buscar ticker..." class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <input type="text" id="searchTicker" placeholder="Buscar ticker..." 
+                           class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                    
                     <select id="filterSignal" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
                         <option value="all">Todos os sinais</option>
                         <option value="Compra">▲ Compra</option>
                         <option value="Venda">▼ Venda</option>
                     </select>
+                    
                     <select id="filterQuality" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
                         <option value="all">Todas qualidades</option>
                         <option value="PREMIUM">💎 Premium</option>
@@ -438,6 +432,15 @@
                         <option value="REGULAR">⚡ Regular</option>
                         <option value="FRACO">⚠️ Fraco</option>
                     </select>
+                    
+                    <select id="filterSetup" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
+                        <option value="all">Todos os Setups</option>
+                    </select>
+                    
+                    <button onclick="clearTradingFilters()" 
+                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition">
+                        <i class="fas fa-times mr-2"></i>Limpar
+                    </button>
                 </div>
             </div>
             
@@ -472,21 +475,23 @@
                 <div class="card stat-card">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-600/10 flex items-center justify-center">
-                            <i class="fas fa-arrow-up text-blue-600 text-xl"></i>
+                            <i class="fas fa-arrow-down text-blue-600 text-xl"></i>
                         </div>
                         <span class="text-3xl font-bold" id="assimetria-sobrecomprados">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Sobrecompra</h3>
+                    <h3 class="text-sm text-gray-400">Sobrecompra ↓</h3>
+                    <div class="text-xs text-gray-500">Acima da média</div>
                 </div>
 
                 <div class="card stat-card">
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/10 flex items-center justify-center">
-                            <i class="fas fa-arrow-down text-red-500 text-xl"></i>
+                            <i class="fas fa-arrow-up text-red-500 text-xl"></i>
                         </div>
                         <span class="text-3xl font-bold" id="assimetria-sobrevendidos">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Sobrevenda</h3>
+                    <h3 class="text-sm text-gray-400">Sobrevenda ↑</h3>
+                    <div class="text-xs text-gray-500">Abaixo da média</div>
                 </div>
 
                 <div class="card stat-card">
@@ -496,7 +501,8 @@
                         </div>
                         <span class="text-3xl font-bold" id="assimetria-criticas">-</span>
                     </div>
-                    <h3 class="text-sm text-gray-400">Oportunidades Críticas</h3>
+                    <h3 class="text-sm text-gray-400">Sinais Críticos (±3σ)</h3>
+                    <div class="text-xs text-gray-500">Desvios extremos</div>
                 </div>
             </div>
 
@@ -536,7 +542,7 @@
             <!-- Filtros -->
             <div class="card mb-6">
                 <h3 class="text-lg font-bold mb-4">Filtros</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <input type="text" id="filterTicker" placeholder="Buscar ticker..." oninput="applyAssimetriaFilters()"
                            class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-gold focus:outline-none">
 
@@ -554,42 +560,44 @@
                         <option value="Alta">🟨 Alta</option>
                         <option value="Moderada">🟦 Moderada</option>
                     </select>
+                    
+                    <button onclick="clearAssimetriaFilters()" 
+                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition">
+                        <i class="fas fa-times mr-2"></i>Limpar Filtros
+                    </button>
                 </div>
             </div>
 
-            <!-- Tabela de Sinais -->
+            <!-- Tabela de Assimetria -->
             <div class="card">
-                <h3 class="text-lg font-bold mb-4">Sinais de Assimetria</h3>
+                <h3 class="text-lg font-bold mb-4">Tabela de Assimetria</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="border-b border-gray-700">
-                                <th class="text-left py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('ticker')">
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('ticker')">
                                     Ticker <i class="fas fa-sort text-xs ml-1"></i>
                                 </th>
-                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('valor_atual')">
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('valor_atual')">
                                     Valor Atual <i class="fas fa-sort text-xs ml-1"></i>
                                 </th>
-                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('media_6m')">
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('media_6m')">
                                     Média 6M <i class="fas fa-sort text-xs ml-1"></i>
                                 </th>
-                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('z_score')">
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('z_score')">
                                     Z-Score <i class="fas fa-sort text-xs ml-1"></i>
                                 </th>
-                                <th class="text-right py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('volatilidade_anualizada')">
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium cursor-pointer hover:text-gold" onclick="sortAssimetriaTable('volatilidade_anualizada')">
                                     Volatilidade <i class="fas fa-sort text-xs ml-1"></i>
                                 </th>
                                 <th class="text-center py-3 px-4 text-gray-400 font-medium">
                                     Status
                                 </th>
-                                <th class="text-center py-3 px-4 text-gray-400 font-medium">
-                                    Nível <i class="fas fa-info-circle text-xs ml-1" title="Crítica: ±3σ | Alta: ±2.5σ | Moderada: ±2σ"></i>
-                                </th>
                             </tr>
                         </thead>
                         <tbody id="assimetriaTableBody">
                             <tr>
-                                <td colspan="7" class="text-center py-8">
+                                <td colspan="6" class="text-center py-8">
                                     <div class="loading mx-auto mb-4"></div>
                                     <p class="text-gray-500">Carregando dados...</p>
                                 </td>
@@ -625,12 +633,12 @@
             </div>
         </div>
         
-        <!-- BLOG PAGE -->
+        <!-- MANUAL PAGE -->
         <div class="page" id="page-blog">
             <div class="card mb-6">
                 <h2 class="text-2xl font-bold mb-6">
                     <i class="fas fa-graduation-cap text-gold mr-3"></i>
-                    Documentação e Guias
+                    Manual e Guias
                 </h2>
                 
                 <div class="space-y-6">
@@ -695,7 +703,6 @@
         // CONFIGURAÇÃO DA API
         // ============================
         const API_URL = 'https://resenha-trader-v2-production.up.railway.app/api';
-        // ⚠️ SUBSTITUA pela sua URL do Railway!
         
         let allSignals = [];
         let assimetriaData = {signals: [], resumo: {}};
@@ -723,11 +730,11 @@
 
             // Atualizar títulos
             const titles = {
-                'home': ['Dashboard', 'Visão geral do mercado'],
+                'home': ['Página Inicial', 'Visão geral do mercado'],
                 'sinais': ['Sinais Trading', 'Todos os sinais disponíveis'],
                 'assimetria': ['Assimetria', 'Análise de Z-Score e volatilidade'],
                 'ciclo': ['Ciclo Fundamentalista', 'Indicadores fundamentalistas'],
-                'blog': ['Documentação', 'Guias e informações']
+                'blog': ['Manual', 'Guias e informações']
             };
 
             if (titles[page]) {
@@ -760,11 +767,11 @@
         }
         
         // ============================
-        // CARREGAR DADOS
+        // CARREGAR DADOS - SINAIS TRADING
         // ============================
         async function carregarDados() {
             try {
-                console.log('🔄 Carregando dados da API...');
+                console.log('📄 Carregando dados da API...');
                 
                 const response = await fetch(`${API_URL}/sinais/`);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -779,7 +786,6 @@
                 }
                 
                 atualizarStats();
-                renderizarSinaisRecentes();
                 renderizarTodosSinais();
                 
             } catch (erro) {
@@ -791,30 +797,16 @@
         function atualizarStats() {
             const compras = allSignals.filter(s => (s.signal || '').toLowerCase().includes('compra')).length;
             const vendas = allSignals.filter(s => (s.signal || '').toLowerCase().includes('venda')).length;
-            const premium = allSignals.filter(s => (s.score || 0) >= 80).length;
-            const avgScore = allSignals.length > 0 
-                ? Math.round(allSignals.reduce((sum, s) => sum + (s.score || 0), 0) / allSignals.length)
-                : 0;
-            const setups = new Set(allSignals.map(s => s.setup)).size;
             
-            document.getElementById('totalSignals').textContent = allSignals.length;
-            document.getElementById('buyCount').textContent = compras;
-            document.getElementById('sellCount').textContent = vendas;
-            document.getElementById('premiumCount').textContent = premium;
-            document.getElementById('avgScore').textContent = avgScore;
-            document.getElementById('setupCount').textContent = setups;
-        }
-        
-        function renderizarSinaisRecentes() {
-            const container = document.getElementById('recentSignals');
-            const recentes = allSignals.slice(0, 6);
-            
-            if (recentes.length === 0) {
-                container.innerHTML = '<div class="col-span-3 text-center py-8 text-gray-500">Nenhum sinal disponível</div>';
-                return;
+            // Preencher dropdown de Setups dinamicamente
+            const uniqueSetups = [...new Set(allSignals.map(s => s.setup))].sort();
+            const filterSetup = document.getElementById('filterSetup');
+            if (filterSetup) {
+                filterSetup.innerHTML = '<option value="all">Todos os Setups</option>';
+                uniqueSetups.forEach(setup => {
+                    filterSetup.innerHTML += `<option value="${setup}">${setup}</option>`;
+                });
             }
-            
-            container.innerHTML = recentes.map(sinal => criarCardSinal(sinal)).join('');
         }
         
         function renderizarTodosSinais() {
@@ -822,12 +814,19 @@
             const searchTerm = (document.getElementById('searchTicker')?.value || '').toLowerCase();
             const filterSignal = document.getElementById('filterSignal')?.value || 'all';
             const filterQuality = document.getElementById('filterQuality')?.value || 'all';
+            const filterSetup = document.getElementById('filterSetup')?.value || 'all';
             
             let filtered = allSignals.filter(s => {
+                // Excluir tickers específicos
+                const excludedTickers = ['CDI', 'US10TY', 'USD', 'CMDTY'];
+                if (excludedTickers.includes(s.ticker)) return false;
+                
                 const matchSearch = !searchTerm || (s.ticker || '').toLowerCase().includes(searchTerm);
                 const matchSignal = filterSignal === 'all' || s.signal === filterSignal;
                 const matchQuality = filterQuality === 'all' || s.quality === filterQuality;
-                return matchSearch && matchSignal && matchQuality;
+                const matchSetup = filterSetup === 'all' || s.setup === filterSetup;
+                
+                return matchSearch && matchSignal && matchQuality && matchSetup;
             });
             
             if (filtered.length === 0) {
@@ -843,6 +842,11 @@
             const badgeClass = isCompra ? 'badge-buy' : 'badge-sell';
             const icon = isCompra ? '▲' : '▼';
             
+            // Filtrar tags excluídas
+            const excludedTags = ['CDI', 'US10TY', 'USD', 'CMDTY'];
+            const tags = (sinal.tags || []).filter(tag => !excludedTags.includes(tag));
+            const tagsHTML = tags.map(tag => `<span class="badge text-xs bg-gray-700 text-gray-300 mr-1 mb-1">${tag}</span>`).join('');
+            
             return `
                 <div class="signal-card">
                     <div class="flex justify-between items-start mb-3">
@@ -851,34 +855,55 @@
                     </div>
                     <div class="text-sm text-gray-400 mb-3">${sinal.setup || 'N/A'}</div>
                     <div class="text-2xl font-bold mb-3">R$ ${typeof sinal.ultimo === 'number' ? sinal.ultimo.toFixed(2) : sinal.ultimo}</div>
-                    <div class="flex justify-between items-center text-sm">
+                    
+                    <!-- Gain e Loss -->
+                    <div class="grid grid-cols-2 gap-2 mb-3 text-xs">
+                        <div class="bg-green-900/20 p-2 rounded">
+                            <div class="text-gray-400">Gain 1</div>
+                            <div class="text-green-500 font-bold">${sinal.gain1 || 'N/A'}</div>
+                        </div>
+                        <div class="bg-green-900/20 p-2 rounded">
+                            <div class="text-gray-400">Gain 2</div>
+                            <div class="text-green-500 font-bold">${sinal.gain2 || 'N/A'}</div>
+                        </div>
+                        <div class="bg-red-900/20 p-2 rounded">
+                            <div class="text-gray-400">Loss 1</div>
+                            <div class="text-red-500 font-bold">${sinal.loss1 || 'N/A'}</div>
+                        </div>
+                        <div class="bg-red-900/20 p-2 rounded">
+                            <div class="text-gray-400">Loss 2</div>
+                            <div class="text-red-500 font-bold">${sinal.loss2 || 'N/A'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-sm mb-2">
                         <span class="text-gray-400">Score: <span class="font-bold text-white">${sinal.score || 0}</span></span>
                         <span class="badge ${sinal.score >= 80 ? 'badge-premium' : ''} text-xs">${sinal.quality || 'N/A'}</span>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-1 mt-2">
+                        ${tagsHTML}
                     </div>
                 </div>
             `;
         }
         
-        function recarregarDados() {
-            carregarDados();
+        function clearTradingFilters() {
+            document.getElementById('searchTicker').value = '';
+            document.getElementById('filterSignal').value = 'all';
+            document.getElementById('filterQuality').value = 'all';
+            document.getElementById('filterSetup').value = 'all';
+            renderizarTodosSinais();
         }
         
-        // ============================
-        // FILTROS
-        // ============================
-        document.addEventListener('DOMContentLoaded', () => {
+        function recarregarDados() {
             carregarDados();
-
-            // Event listeners para filtros
-            ['searchTicker', 'filterSignal', 'filterQuality'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', renderizarTodosSinais);
-                    el.addEventListener('change', renderizarTodosSinais);
-                }
-            });
-        });
-
+            if (document.getElementById('page-home').classList.contains('active')) {
+                loadHomeAssimetriaCard();
+            }
+        }
+        
         // ============================
         // FUNÇÕES DE ASSIMETRIA
         // ============================
@@ -926,18 +951,23 @@
             document.getElementById('assimetria-sobrevendidos').textContent = resumo.sobrevendidos || 0;
 
             // Calcular críticas
-            const criticas = assimetriaData.signals.filter(s => s.nivel_oportunidade === 'Crítica').length;
+            const criticas = assimetriaData.signals.filter(s => Math.abs(s.z_score) >= 3).length;
             document.getElementById('assimetria-criticas').textContent = criticas;
         }
 
         function renderAssimetriaTable(filteredData = null) {
             const tbody = document.getElementById('assimetriaTableBody');
-            const data = filteredData || assimetriaData.signals;
+            let data = filteredData || assimetriaData.signals;
+
+            // Ordenação padrão: Z-Score descendente
+            if (!filteredData) {
+                data = [...data].sort((a, b) => Math.abs(b.z_score) - Math.abs(a.z_score));
+            }
 
             if (data.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" class="text-center py-8 text-gray-500">
+                        <td colspan="6" class="text-center py-8 text-gray-500">
                             Nenhum sinal encontrado
                         </td>
                     </tr>
@@ -946,31 +976,25 @@
             }
 
             tbody.innerHTML = data.map(signal => {
-                const badgeClass = getBadgeClass(signal.status, signal.nivel_oportunidade);
-                const badgeText = signal.nivel_oportunidade;
-                const badgeIcon = signal.nivel_oportunidade === 'Crítica' ? '⚠️ ' :
-                                  signal.nivel_oportunidade === 'Alta' ? '🟨 ' : '🟦 ';
-
                 const zscoreColor = Math.abs(signal.z_score) >= 3 ? 'text-orange-500' :
                                    Math.abs(signal.z_score) >= 2.5 ? 'text-gold' : 'text-white';
-
                 const statusColor = signal.status === 'Sobrecomprado' ? 'text-blue-500' : 'text-red-500';
 
                 return `
                     <tr class="border-b border-gray-800 hover:bg-gray-800/30 transition">
-                        <td class="py-3 px-4 font-bold text-white">
+                        <td class="py-3 px-4 text-center font-bold text-white">
                             ${signal.ticker}
                         </td>
-                        <td class="py-3 px-4 text-right text-white">
+                        <td class="py-3 px-4 text-center text-white">
                             R$ ${signal.valor_atual.toFixed(2)}
                         </td>
-                        <td class="py-3 px-4 text-right text-gray-400">
+                        <td class="py-3 px-4 text-center text-gray-400">
                             R$ ${signal.media_6m.toFixed(2)}
                         </td>
-                        <td class="py-3 px-4 text-right font-bold ${zscoreColor}">
+                        <td class="py-3 px-4 text-center font-bold ${zscoreColor}">
                             ${signal.z_score >= 0 ? '+' : ''}${signal.z_score.toFixed(2)}
                         </td>
-                        <td class="py-3 px-4 text-right text-gray-300">
+                        <td class="py-3 px-4 text-center text-gray-300">
                             ${(signal.volatilidade_anualizada * 100).toFixed(1)}%
                         </td>
                         <td class="py-3 px-4 text-center">
@@ -978,26 +1002,9 @@
                                 ${signal.status}
                             </span>
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            <span class="px-3 py-1 rounded-full text-xs font-medium ${badgeClass}">
-                                ${badgeIcon}${badgeText}
-                            </span>
-                        </td>
                     </tr>
                 `;
             }).join('');
-        }
-
-        function getBadgeClass(status, nivel) {
-            if (status === 'Sobrecomprado') {
-                if (nivel === 'Crítica') return 'bg-blue-700 text-white badge-critica';
-                if (nivel === 'Alta') return 'bg-blue-600 text-white';
-                return 'bg-blue-500 text-white';
-            } else {
-                if (nivel === 'Crítica') return 'bg-red-700 text-white badge-critica';
-                if (nivel === 'Alta') return 'bg-red-600 text-white';
-                return 'bg-red-500 text-white';
-            }
         }
 
         function createAssimetriaChart() {
@@ -1011,14 +1018,14 @@
                 assimetriaChart.destroy();
             }
 
-            // Dados base (|Z-Score| >= 2.0)
+            // Dados base
             const baseSignals = assimetriaData.signals;
 
             // Separar sobrecomprados e sobrevendidos
             const sobrecomprados = baseSignals.filter(s => s.status === 'Sobrecomprado');
             const sobrevendidos = baseSignals.filter(s => s.status === 'Sobrevendido');
 
-            // Adicionar tickers customizados (em cinza)
+            // Adicionar tickers customizados
             const customDataset = customTickers.map(ticker => {
                 const signal = baseSignals.find(s => s.ticker.toUpperCase() === ticker.toUpperCase());
                 if (signal) {
@@ -1126,12 +1133,33 @@
                     }
                 },
                 plugins: [{
+                    id: 'tickerLabels',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        ctx.save();
+                        ctx.font = '10px Inter, sans-serif';
+                        ctx.fillStyle = '#ffffff';
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+
+                        chart.data.datasets.forEach((dataset, datasetIndex) => {
+                            const meta = chart.getDatasetMeta(datasetIndex);
+                            meta.data.forEach((point, index) => {
+                                const ticker = dataset.data[index].ticker;
+                                if (ticker) {
+                                    ctx.fillText(ticker, point.x + 8, point.y);
+                                }
+                            });
+                        });
+
+                        ctx.restore();
+                    }
+                }, {
                     afterDraw: function(chart) {
                         const ctx = chart.ctx;
                         const yAxis = chart.scales.y;
                         const xAxis = chart.scales.x;
 
-                        // Linhas de referência
                         ctx.save();
                         ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
                         ctx.lineWidth = 1;
@@ -1182,9 +1210,21 @@
                 return;
             }
 
-            customTickers = [...new Set([...customTickers, ...tickers])]; // Remove duplicatas
+            // Verificar se os tickers existem nos dados
+            const validTickers = tickers.filter(ticker => {
+                return assimetriaData.signals.some(s => s.ticker.toUpperCase() === ticker);
+            });
+
+            if (validTickers.length === 0) {
+                alert('Nenhum dos tickers digitados foi encontrado nos dados.');
+                return;
+            }
+
+            customTickers = [...new Set([...customTickers, ...validTickers])];
             createAssimetriaChart();
             input.value = '';
+            
+            alert(`✅ ${validTickers.length} ticker(s) adicionado(s) ao gráfico!`);
         }
 
         function resetChart() {
@@ -1213,6 +1253,13 @@
 
             renderAssimetriaTable(filtered);
         }
+        
+        function clearAssimetriaFilters() {
+            document.getElementById('filterTicker').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterNivel').value = '';
+            renderAssimetriaTable(assimetriaData.signals);
+        }
 
         function sortAssimetriaTable(column) {
             if (!sortDirection[column]) {
@@ -1239,6 +1286,45 @@
 
             renderAssimetriaTable(sorted);
         }
+        
+        // ============================
+        // HOME - CARD DE ASSIMETRIA
+        // ============================
+        async function loadHomeAssimetriaCard() {
+            try {
+                const resumoResponse = await fetch(`${API_URL}/assimetria/resumo`);
+                const resumo = await resumoResponse.json();
+                
+                document.getElementById('home-assimetria-total').textContent = resumo.total || 0;
+                document.getElementById('home-assimetria-sobrecomprados').textContent = resumo.sobrecomprados || 0;
+                document.getElementById('home-assimetria-sobrevendidos').textContent = resumo.sobrevendidos || 0;
+                
+                // Carregar dados completos para calcular críticas
+                const response = await fetch(`${API_URL}/assimetria/`);
+                const data = await response.json();
+                const criticas = (data.signals || []).filter(s => Math.abs(s.z_score) >= 3).length;
+                document.getElementById('home-assimetria-criticas').textContent = criticas;
+            } catch (error) {
+                console.error('Erro ao carregar dados de assimetria na Home:', error);
+            }
+        }
+        
+        // ============================
+        // INICIALIZAÇÃO
+        // ============================
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+            loadHomeAssimetriaCard();
+
+            // Event listeners para filtros de Trading
+            ['searchTicker', 'filterSignal', 'filterQuality', 'filterSetup'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', renderizarTodosSinais);
+                    el.addEventListener('change', renderizarTodosSinais);
+                }
+            });
+        });
     </script>
 </body>
 </html>
