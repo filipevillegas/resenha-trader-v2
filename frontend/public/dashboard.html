@@ -118,7 +118,11 @@
         .sidebar.collapsed .sidebar-item i {
             margin-right: 0;
         }
-        
+
+        .sidebar.collapsed .sidebar-text {
+            display: none;
+        }
+
         /* Main content */
         .main-content {
             margin-left: 280px;
@@ -475,8 +479,8 @@
                 <span>Ciclo Fundamentalista</span>
             </a>
             <a href="#" class="sidebar-item" data-page="blog">
-                <i class="fas fa-book"></i>
-                <span>Manual</span>
+                <i class="fas fa-graduation-cap"></i>
+                <span>Educacional</span>
             </a>
         </nav>
         
@@ -494,7 +498,7 @@
         <header class="mb-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Visão Geral do Mercado</h1>
+                    <h1 class="text-3xl font-bold text-white mb-2" id="pageTitle">Visão Geral</h1>
                     <p class="text-gray-400" id="pageSubtitle"></p>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -534,14 +538,20 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-sinais-total">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400 mb-2">Sinais Ativos</h3>
-                        <div class="flex items-center space-x-3 text-xs">
-                            <span class="text-emerald-500" id="home-sinais-compra">▲ 0</span>
-                            <span class="text-red-500" id="home-sinais-venda">▼ 0</span>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Sinais Ativos</h3>
+                        <div class="flex items-center justify-between text-xs mt-2">
+                            <div class="text-center">
+                                <div class="text-emerald-500 font-bold text-lg" id="home-sinais-compra-num">0</div>
+                                <div class="text-gray-500 text-xs">Compra</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-red-500 font-bold text-lg" id="home-sinais-venda-num">0</div>
+                                <div class="text-gray-500 text-xs">Venda</div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Por Qualidade -->
+                    <!-- Qualidade -->
                     <div class="bg-gray-800 p-6 rounded-lg">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-500/10 flex items-center justify-center">
@@ -549,11 +559,11 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-sinais-quality-count">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400 mb-2">Por Qualidade</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Qualidade</h3>
                         <div class="space-y-1 text-xs" id="home-sinais-quality"></div>
                     </div>
 
-                    <!-- Por Tipo de Ativo -->
+                    <!-- Tipo de Ativo -->
                     <div class="bg-gray-800 p-6 rounded-lg">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
@@ -561,11 +571,11 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-sinais-asset-count">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400 mb-2">Por Tipo de Ativo</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Tipo de Ativo</h3>
                         <div class="space-y-1 text-xs" id="home-sinais-assets"></div>
                     </div>
 
-                    <!-- Por Setup -->
+                    <!-- Setup -->
                     <div class="bg-gray-800 p-6 rounded-lg">
                         <div class="flex items-center justify-between mb-4">
                             <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 flex items-center justify-center">
@@ -573,7 +583,7 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-sinais-setup-count">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400 mb-2">Por Setup</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-2">Setup</h3>
                         <div class="space-y-1 text-xs" id="home-sinais-setups"></div>
                     </div>
                 </div>
@@ -593,18 +603,7 @@
                 </div>
                 
                 <!-- Grid de cards de resumo -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <!-- Total -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-500/10 flex items-center justify-center">
-                                <i class="fas fa-chart-area text-blue-500 text-xl"></i>
-                            </div>
-                            <span class="text-3xl font-bold" id="home-assimetria-total">-</span>
-                        </div>
-                        <h3 class="text-sm text-gray-400">Total de Sinais</h3>
-                    </div>
-
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Sobrecompra -->
                     <div class="bg-gray-800 p-6 rounded-lg">
                         <div class="flex items-center justify-between mb-4">
@@ -613,7 +612,7 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-assimetria-sobrecomprados">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400">Sobrecompra ↓</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sobrecompra ↓</h3>
                         <div class="text-xs text-gray-500">Acima da média</div>
                     </div>
 
@@ -625,7 +624,7 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-assimetria-sobrevendidos">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400">Sobrevenda ↑</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sobrevenda ↑</h3>
                         <div class="text-xs text-gray-500">Abaixo da média</div>
                     </div>
 
@@ -637,7 +636,7 @@
                             </div>
                             <span class="text-3xl font-bold" id="home-assimetria-criticas">-</span>
                         </div>
-                        <h3 class="text-sm text-gray-400">Sinais Críticos (±3σ)</h3>
+                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sinais Críticos (±3σ)</h3>
                         <div class="text-xs text-gray-500">Desvios extremos</div>
                     </div>
                 </div>
@@ -647,30 +646,28 @@
         <!-- SINAIS PAGE -->
         <div class="page" id="page-sinais">
             <div class="card mb-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold flex items-center">
-                        <i class="fas fa-sliders-h text-gold mr-3"></i>
-                        Filtros
-                    </h2>
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-4 flex-1">
+                        <h2 class="text-xl font-bold flex items-center whitespace-nowrap">
+                            <i class="fas fa-sliders-h text-gold mr-3"></i>
+                            Filtros
+                        </h2>
+                        <div class="relative flex-1 max-w-md">
+                            <input type="text"
+                                   id="searchTicker"
+                                   placeholder="Buscar ticker..."
+                                   class="w-full px-4 py-2 bg-dark-lighter border border-gray-border rounded-xl text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-all text-sm">
+                            <i class="fas fa-search absolute right-4 top-3 text-gray-500 text-sm"></i>
+                        </div>
+                    </div>
                     <button type="button" onclick="clearTradingFilters()"
-                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition">
-                        <i class="fas fa-times mr-2"></i>Limpar Filtros
+                            class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium rounded-lg transition whitespace-nowrap">
+                        <i class="fas fa-times mr-2"></i>Limpar
                     </button>
                 </div>
 
                 <div id="filtersContainer">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                        <div class="col-span-2">
-                            <label class="block text-sm font-semibold text-gray-300 mb-3">Buscar Ticker</label>
-                            <div class="relative">
-                                <input type="text"
-                                       id="searchTicker"
-                                       placeholder="Digite o ticker..."
-                                       class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-all font-medium">
-                                <i class="fas fa-search absolute right-4 top-4 text-gray-500"></i>
-                            </div>
-                        </div>
-
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-300 mb-3">Tipo de Sinal</label>
                             <select id="filterSignal" class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white focus:border-gold focus:outline-none transition-all font-medium">
@@ -927,12 +924,12 @@
             </div>
         </div>
         
-        <!-- MANUAL PAGE -->
+        <!-- EDUCACIONAL PAGE -->
         <div class="page" id="page-blog">
             <div class="card mb-6">
                 <h2 class="text-2xl font-bold mb-6">
                     <i class="fas fa-graduation-cap text-gold mr-3"></i>
-                    Manual e Guias
+                    Educacional
                 </h2>
                 
                 <div class="space-y-6">
@@ -1024,11 +1021,11 @@
 
             // Atualizar títulos
             const titles = {
-                'home': ['Visão Geral do Mercado', ''],
-                'sinais': ['Sinais Trading', 'Todos os sinais disponíveis'],
-                'assimetria': ['Assimetria', 'Análise de Z-Score e volatilidade'],
-                'ciclo': ['Ciclo Fundamentalista', 'Indicadores fundamentalistas'],
-                'blog': ['Manual', 'Guias e informações']
+                'home': ['Visão Geral', ''],
+                'sinais': ['Sinais Trading', ''],
+                'assimetria': ['Assimetria', ''],
+                'ciclo': ['Ciclo Fundamentalista', ''],
+                'blog': ['Educacional', '']
             };
 
             if (titles[page]) {
@@ -1108,8 +1105,8 @@
             // Compras e Vendas
             const compras = allSignals.filter(s => (s.signal || '').toLowerCase().includes('compra')).length;
             const vendas = allSignals.filter(s => (s.signal || '').toLowerCase().includes('venda')).length;
-            document.getElementById('home-sinais-compra').textContent = `▲ ${compras}`;
-            document.getElementById('home-sinais-venda').textContent = `▼ ${vendas}`;
+            document.getElementById('home-sinais-compra-num').textContent = compras;
+            document.getElementById('home-sinais-venda-num').textContent = vendas;
 
             // Por Qualidade
             const qualityCounts = {};
