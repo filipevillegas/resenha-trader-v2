@@ -442,6 +442,48 @@
             color: #FFD700;
             margin-left: auto;
         }
+
+        /* Animações e Hover Effects */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .transform {
+            transition: transform 0.3s ease;
+        }
+
+        .hover\:scale-105:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -603,42 +645,59 @@
                 </div>
                 
                 <!-- Grid de cards de resumo -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Sobrecompra -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600/20 to-blue-600/10 flex items-center justify-center">
-                                <i class="fas fa-arrow-down text-blue-600 text-xl"></i>
-                            </div>
-                            <span class="text-3xl font-bold" id="home-assimetria-sobrecomprados">-</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <!-- Card 1: Total -->
+                    <div class="bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-chart-line text-3xl text-blue-400"></i>
+                            <span class="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full">Todos</span>
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sobrecompra ↓</h3>
-                        <div class="text-xs text-gray-500">Acima da média</div>
+                        <div class="text-2xl font-bold text-white" id="home-assimetria-total">-</div>
+                        <div class="text-xs text-gray-400 mt-1">Total de Sinais</div>
                     </div>
 
-                    <!-- Sobrevenda -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-500/10 flex items-center justify-center">
-                                <i class="fas fa-arrow-up text-red-500 text-xl"></i>
-                            </div>
-                            <span class="text-3xl font-bold" id="home-assimetria-sobrevendidos">-</span>
+                    <!-- Card 2: Sobrecompra -->
+                    <div class="bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-arrow-down text-3xl text-red-400"></i>
+                            <span class="text-xs px-2 py-1 bg-red-500/20 text-red-300 rounded-full">Venda</span>
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sobrevenda ↑</h3>
-                        <div class="text-xs text-gray-500">Abaixo da média</div>
+                        <div class="text-2xl font-bold text-white" id="home-assimetria-sobrecomprados">-</div>
+                        <div class="text-xs text-gray-400 mt-1">Sobrecompra ↓</div>
                     </div>
 
-                    <!-- Críticas -->
-                    <div class="bg-gray-800 p-6 rounded-lg">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-600/20 to-orange-600/10 flex items-center justify-center">
-                                <i class="fas fa-exclamation-triangle text-orange-600 text-xl"></i>
-                            </div>
-                            <span class="text-3xl font-bold" id="home-assimetria-criticas">-</span>
+                    <!-- Card 3: Sobrevenda -->
+                    <div class="bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-arrow-up text-3xl text-green-400"></i>
+                            <span class="text-xs px-2 py-1 bg-green-500/20 text-green-300 rounded-full">Compra</span>
                         </div>
-                        <h3 class="text-sm font-semibold text-gray-400 mb-1">Sinais Críticos (±3σ)</h3>
-                        <div class="text-xs text-gray-500">Desvios extremos</div>
+                        <div class="text-2xl font-bold text-white" id="home-assimetria-sobrevendidos">-</div>
+                        <div class="text-xs text-gray-400 mt-1">Sobrevenda ↑</div>
                     </div>
+
+                    <!-- Card 4: Críticos -->
+                    <div class="bg-slate-700/30 rounded-lg p-4 hover:bg-slate-700/50 transition-all duration-300 cursor-pointer transform hover:scale-105 ring-2 ring-yellow-500/30">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-exclamation-triangle text-3xl text-yellow-400 animate-pulse"></i>
+                            <span class="text-xs px-2 py-1 bg-yellow-500/20 text-yellow-300 rounded-full">Alerta</span>
+                        </div>
+                        <div class="text-2xl font-bold text-white" id="home-assimetria-criticas">-</div>
+                        <div class="text-xs text-gray-400 mt-1">Sinais Críticos (±3σ)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Gráfico de Distribuição -->
+            <div class="card p-6 mt-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Distribuição de Sinais</h3>
+                        <p class="text-sm text-gray-400 mt-1">Panorama geral do mercado</p>
+                    </div>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="homeDistributionChart"></canvas>
                 </div>
             </div>
         </div>
@@ -708,6 +767,18 @@
                                 </button>
                                 <div class="dropdown-menu" id="setupDropdownMenu"></div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Segunda linha de filtros -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-300 mb-3">Performance</label>
+                            <select id="filterPerformance" onchange="updateActiveFiltersDisplay(); renderizarTodosSinais();" class="w-full px-4 py-3 bg-dark-lighter border border-gray-border rounded-xl text-white focus:border-gold focus:outline-none transition-all font-medium">
+                                <option value="todos">Todos</option>
+                                <option value="positivo">✅ Ganho Positivo</option>
+                                <option value="negativo">⚠️ Loss Negativo</option>
+                            </select>
                         </div>
                     </div>
 
@@ -1181,6 +1252,7 @@
             const container = document.getElementById('allSignals');
             const searchTerm = (document.getElementById('searchTicker')?.value || '').toLowerCase();
             const filterSignal = document.getElementById('filterSignal')?.value || 'all';
+            const filterPerformance = document.getElementById('filterPerformance')?.value || 'todos';
 
             let filtered = allSignals.filter(s => {
                 // Excluir tickers específicos
@@ -1213,7 +1285,19 @@
                     matchQuickFilters = activeQuickFilters.every(filter => tags.includes(filter));
                 }
 
-                return matchSearch && matchSignal && matchQuality && matchSetup && matchAssetType && matchQuickFilters;
+                // Filtro de Performance
+                let matchPerformance = true;
+                if (filterPerformance === 'positivo') {
+                    const gain1 = parseFloat(s.gain1);
+                    const ultimo = parseFloat(s.ultimo);
+                    matchPerformance = !isNaN(gain1) && !isNaN(ultimo) && gain1 > ultimo;
+                } else if (filterPerformance === 'negativo') {
+                    const loss1 = parseFloat(s.loss1);
+                    const ultimo = parseFloat(s.ultimo);
+                    matchPerformance = !isNaN(loss1) && !isNaN(ultimo) && loss1 < ultimo;
+                }
+
+                return matchSearch && matchSignal && matchQuality && matchSetup && matchAssetType && matchQuickFilters && matchPerformance;
             });
 
             if (filtered.length === 0) {
@@ -1788,6 +1872,7 @@
         function clearTradingFilters() {
             document.getElementById('searchTicker').value = '';
             document.getElementById('filterSignal').value = 'all';
+            document.getElementById('filterPerformance').value = 'todos';
             selectedAssetTypes = [];
             selectedQualities = [];
             selectedSetups = [];
@@ -2266,19 +2351,90 @@
             try {
                 const resumoResponse = await fetch(`${API_URL}/assimetria/resumo`);
                 const resumo = await resumoResponse.json();
-                
+
                 document.getElementById('home-assimetria-total').textContent = resumo.total || 0;
                 document.getElementById('home-assimetria-sobrecomprados').textContent = resumo.sobrecomprados || 0;
                 document.getElementById('home-assimetria-sobrevendidos').textContent = resumo.sobrevendidos || 0;
-                
-                // Carregar dados completos para calcular críticas
+
+                // Carregar dados completos para calcular críticas e gráfico
                 const response = await fetch(`${API_URL}/assimetria/`);
                 const data = await response.json();
-                const criticas = (data.signals || []).filter(s => Math.abs(s.z_score) >= 3).length;
+                const signals = data.signals || [];
+                const criticas = signals.filter(s => Math.abs(s.z_score) >= 3).length;
                 document.getElementById('home-assimetria-criticas').textContent = criticas;
+
+                // Criar gráfico de distribuição
+                createDistributionChart(signals);
             } catch (error) {
                 console.error('Erro ao carregar dados de assimetria na Home:', error);
             }
+        }
+
+        function createDistributionChart(data) {
+            const ctx = document.getElementById('homeDistributionChart');
+            if (!ctx) return;
+
+            // Calcular distribuição
+            const sobrevenda = data.filter(s => s.z_score < -1 && s.z_score > -3).length;
+            const neutro = data.filter(s => s.z_score >= -1 && s.z_score <= 1).length;
+            const sobrecompra = data.filter(s => s.z_score > 1 && s.z_score < 3).length;
+            const criticos = data.filter(s => Math.abs(s.z_score) >= 3).length;
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sobrevenda ↑', 'Neutro', 'Sobrecompra ↓', 'Críticos ±3σ'],
+                    datasets: [{
+                        label: 'Quantidade de Sinais',
+                        data: [sobrevenda, neutro, sobrecompra, criticos],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(107, 114, 128, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(255, 215, 0, 0.8)'
+                        ],
+                        borderColor: '#1e293b',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#fff',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#475569',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: (context) => `${context.parsed.y} sinais`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#9ca3af',
+                                stepSize: 1,
+                                font: { size: 12 }
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#fff',
+                                font: { size: 12, weight: 'bold' }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
         }
         
         // ============================
