@@ -484,11 +484,303 @@
         .hover\:scale-105:hover {
             transform: scale(1.05);
         }
+
+        /* ========================================
+           ANIMAÇÕES PROFISSIONAIS
+           ======================================== */
+
+        /* Fade in para páginas */
+        .page-content {
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pulse para sinais críticos */
+        .critical-badge {
+            animation: criticalPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes criticalPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(255, 215, 0, 0);
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                #1e293b 25%,
+                #334155 50%,
+                #1e293b 75%
+            );
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+            border-radius: 0.5rem;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-line {
+            height: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .skeleton-card {
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 0.75rem;
+        }
+
+        /* Badges animados */
+        .badge-animated {
+            transition: all 0.2s ease;
+        }
+
+        .badge-animated:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Fade in para tabelas */
+        tbody tr {
+            animation: fadeIn 0.3s ease-out backwards;
+        }
+
+        tbody tr:nth-child(1) { animation-delay: 0.05s; }
+        tbody tr:nth-child(2) { animation-delay: 0.1s; }
+        tbody tr:nth-child(3) { animation-delay: 0.15s; }
+        tbody tr:nth-child(4) { animation-delay: 0.2s; }
+        tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Tooltip animado */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            padding: 0.5rem 0.75rem;
+            background: #1e293b;
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 0.375rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: tooltipFade 0.2s ease;
+            z-index: 1000;
+        }
+
+        @keyframes tooltipFade {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(-8px);
+            }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeInUp 0.3s ease;
+        }
+
+        /* ========================================
+           RESPONSIVIDADE
+           ======================================== */
+
+        /* Ajuste do main content em mobile */
+        @media (max-width: 1023px) {
+            .main-content {
+                margin-left: 0 !important;
+                padding: 1rem !important;
+            }
+        }
+
+        /* Grid responsivo para cards */
+        .grid-responsive {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        /* Mobile: 1 coluna */
+        @media (max-width: 767px) {
+            .grid-responsive,
+            .grid.grid-cols-4,
+            .grid.grid-cols-3,
+            .grid.grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Header mobile */
+            header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1rem;
+            }
+
+            header > div {
+                width: 100%;
+            }
+        }
+
+        /* Tablet: 2 colunas */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .grid-responsive,
+            .grid.grid-cols-4,
+            .grid.grid-cols-3 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* Desktop: mantém original */
+        @media (min-width: 1024px) {
+            .grid.grid-cols-4 {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .grid.grid-cols-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Tabelas responsivas em mobile */
+        @media (max-width: 767px) {
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 0.75rem;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            /* Indicador de scroll */
+            .table-container::after {
+                content: '← Deslize para ver mais →';
+                display: block;
+                text-align: center;
+                padding: 0.5rem;
+                background: rgba(59, 130, 246, 0.1);
+                color: #3b82f6;
+                font-size: 0.75rem;
+                border-radius: 0 0 0.75rem 0.75rem;
+            }
+        }
+
+        /* Gráficos responsivos */
+        canvas {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Botões em mobile */
+        @media (max-width: 767px) {
+            button:not(.dropdown-toggle):not(#menuToggle) {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .flex.gap-4 {
+                flex-direction: column;
+            }
+        }
+
+        /* Menu mobile */
+        #menuToggle {
+            display: none;
+        }
+
+        #menuOverlay {
+            display: none;
+        }
+
+        @media (max-width: 1023px) {
+            #menuToggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0) !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Botão Hamburger Mobile -->
+    <button type="button" id="menuToggle" class="fixed top-4 left-4 z-50 lg:hidden bg-slate-800 p-3 rounded-lg text-white shadow-lg hover:bg-slate-700 transition-colors">
+        <i class="fas fa-bars text-xl"></i>
+    </button>
+
+    <!-- Overlay Mobile -->
+    <div id="menuOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar fixed left-0 top-0 h-full w-64 bg-slate-800 border-r border-slate-700 z-50" id="sidebar">
         <!-- Logo -->
         <div class="p-6 border-b border-gray-800">
             <div class="flex items-center space-x-3">
@@ -1065,7 +1357,114 @@
         let assimetriaChart = null;
         let customTickers = [];
         let sortDirection = {};
-        
+
+        // ============================
+        // ESTADOS VISUAIS (LOADING, EMPTY, ERROR)
+        // ============================
+
+        // Loading state genérico
+        function showLoadingState(containerId, message = 'Carregando dados...') {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16">
+                    <div class="spinner mb-4"></div>
+                    <p class="text-gray-400 text-sm">${message}</p>
+                </div>
+            `;
+        }
+
+        // Skeleton para cards
+        function showSkeletonCards(containerId, count = 4) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const skeletons = Array(count).fill(0).map(() => `
+                <div class="skeleton-card">
+                    <div class="skeleton skeleton-line" style="width: 60%"></div>
+                    <div class="skeleton skeleton-line" style="width: 40%"></div>
+                    <div class="skeleton skeleton-line" style="width: 80%"></div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">${skeletons}</div>`;
+        }
+
+        // Empty state
+        function showEmptyState(containerId, config = {}) {
+            const {
+                icon = 'fa-inbox',
+                title = 'Nenhum dado disponível',
+                message = 'Aguarde a próxima atualização às 05h',
+                action = null
+            } = config;
+
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16 text-center">
+                    <i class="fas ${icon} text-6xl text-gray-600 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">${title}</h3>
+                    <p class="text-gray-400 text-sm mb-4">${message}</p>
+                    ${action ? `<button onclick="${action.onClick}" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">${action.label}</button>` : ''}
+                </div>
+            `;
+        }
+
+        // Error state
+        function showErrorState(containerId, error = null) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16 text-center">
+                    <i class="fas fa-exclamation-circle text-6xl text-red-500 mb-4"></i>
+                    <h3 class="text-xl font-bold text-white mb-2">Erro ao carregar dados</h3>
+                    <p class="text-gray-400 text-sm mb-4">
+                        ${error ? error.message : 'Ocorreu um erro ao buscar as informações'}
+                    </p>
+                    <button onclick="location.reload()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        <i class="fas fa-redo mr-2"></i>Tentar Novamente
+                    </button>
+                </div>
+            `;
+        }
+
+        // Success toast notification
+        function showToast(message, type = 'success') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-times-circle',
+                info: 'fa-info-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeIn`;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${icons[type]} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
         // ============================
         // NAVEGAÇÃO
         // ============================
@@ -2466,6 +2865,45 @@
                     document.querySelectorAll('.dropdown-icon').forEach(i => i.classList.remove('open'));
                     document.querySelectorAll('.dropdown-toggle').forEach(t => t.classList.remove('active'));
                 }
+            });
+
+            // ============================
+            // MENU MOBILE
+            // ============================
+            const menuToggle = document.getElementById('menuToggle');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const sidebar = document.getElementById('sidebar');
+
+            // Abrir/fechar menu
+            menuToggle?.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                menuOverlay.classList.toggle('hidden');
+
+                // Mudar ícone
+                const icon = menuToggle.querySelector('i');
+                if (sidebar.classList.contains('open')) {
+                    icon.className = 'fas fa-times text-xl';
+                } else {
+                    icon.className = 'fas fa-bars text-xl';
+                }
+            });
+
+            // Fechar ao clicar no overlay
+            menuOverlay?.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                menuOverlay.classList.add('hidden');
+                menuToggle.querySelector('i').className = 'fas fa-bars text-xl';
+            });
+
+            // Fechar ao clicar em link do menu (mobile)
+            document.querySelectorAll('.sidebar-item').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        sidebar.classList.remove('open');
+                        menuOverlay.classList.add('hidden');
+                        menuToggle.querySelector('i').className = 'fas fa-bars text-xl';
+                    }
+                });
             });
         });
     </script>
